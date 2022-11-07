@@ -31,6 +31,10 @@ app.get("/", async (req, res) => {
     res.render("homePage", {products})
 })
 
+app.get("/menu", (req, res) => {
+    res.render("menu")
+})
+
 
 
 
@@ -60,6 +64,9 @@ app.post("/categories", async (req, res) => {
     await newCategory.save()
     res.redirect("/categories")
 })
+
+
+
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}!`)
