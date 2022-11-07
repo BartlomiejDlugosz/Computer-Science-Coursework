@@ -24,6 +24,13 @@ app.use("view engine", "ejs")
 app.use("views", path.join(__dirname, "views"))
 
 
+
+app.get("/", async (req, res) => {
+    const products = await Product.find({})
+    res.render("homePage", {products})
+})
+
+
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}!`)
 })
