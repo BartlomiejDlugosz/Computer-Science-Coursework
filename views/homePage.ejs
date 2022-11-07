@@ -1,17 +1,22 @@
-<%- include("/paritals/head", {title: "Home Page"}) %> 
+<%- include("partials/head", {title: "Home Page" }) %>
     <main class="container">
         <% for (let product of products) { %>
             <div class="card" style="width: 18rem;">
                 <% if (product.images[0]) { %>
                     <img src="<%= product.images[0] %>" class="card-img-top">
-                <% } %> 
-                <div class="card-body">
-                  <h5 class="card-title"><%= product.name %></h5>
-                  <p class="card-text"><%= product.description %></p>
-                  <a href="#" class="btn btn-primary">Add to Cart</a>
-                </div>
-              </div>
-        <% } %> 
+                    <% } %>
+                        <div class="card-body">
+                            <h5 class="card-title">
+                                <%= product.name %>
+                            </h5>
+                            <p class="card-text">
+                                <%= product.description %>
+                            </p>
+                            <a href="#" class="btn btn-primary">Add to Cart</a>
+                        </div>
+            </div>
+            <% } %>
     </main>
-</body>
-</html>
+    </body>
+
+    </html>

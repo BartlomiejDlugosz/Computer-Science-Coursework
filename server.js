@@ -9,26 +9,26 @@ const Product = require("./Models/Product")
 const Category = require("./Models/Category")
 
 mongoose.connect("MONGO_DB_LINK_REDACTED")
-.then(data => {
-    console.log("Connected to mongo")
-})
-.catch(err => {
-    console.log("An error has occured!")
-    console.log(err)
-})
+    .then(data => {
+        console.log("Connected to mongo")
+    })
+    .catch(err => {
+        console.log("An error has occured!")
+        console.log(err)
+    })
 
 const PORT = 3000
 
 
-app.use("view engine", "ejs")
-app.use("views", path.join(__dirname, "views"))
-app.use(express.urlencoded({extended: true}))
+app.set("view engine", "ejs")
+app.set("views", path.join(__dirname, "views"))
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 
 
 app.get("/", async (req, res) => {
     const products = await Product.find({})
-    res.render("homePage", {products})
+    res.render("homePage", { products })
 })
 
 app.get("/menu", (req, res) => {
@@ -40,12 +40,12 @@ app.get("/menu", (req, res) => {
 
 app.get("/products", async (req, res) => {
     const products = await Product.find({})
-    res.render("products", {products})
+    res.render("products", { products })
 })
 
 app.post("/products", async (req, res) => {
-    const {name, price, description, images, discount, discountedPrice, categories, tags} = req.body
-    const newProduct = new Product({name, price, description, images, discount, discountedPrice, categories, tags})
+    const { name, price, description, images, discount, discountedPrice, categories, tags } = req.body
+    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories, tags })
     await newProduct.save()
     res.redirect("/products")
 })
@@ -55,12 +55,12 @@ app.post("/products", async (req, res) => {
 
 app.get("/categories", async (req, res) => {
     const categories = await Category.find({})
-    res.render("categories", {categories})
+    res.render("categories", { categories })
 })
 
 app.post("/categories", async (req, res) => {
-    const {name, description} = req.body
-    const newCategory = new Category({name, description})
+    const { name, description } = req.body
+    const newCategory = new Category({ name, description })
     await newCategory.save()
     res.redirect("/categories")
 })
