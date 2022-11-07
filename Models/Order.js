@@ -2,11 +2,11 @@ const mongoose = require("mongoose")
 
 const orderSchema = new mongoose.Schema({
     userId: {
-        type: ObjectId,
+        type: Object,
         required: true
     },
     productIds: {
-        type: [ObjectId],
+        type: [Object],
         required: true
     },
     date: {

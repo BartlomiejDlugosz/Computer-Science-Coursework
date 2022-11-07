@@ -21,7 +21,7 @@ const productSchema = new mongoose.Schema({
         min: 0,
         default: 0
     },
-    categories: [ObjectId],
+    categories: [Object],
     tags: [String]
 })
 

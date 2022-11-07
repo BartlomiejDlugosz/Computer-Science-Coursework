@@ -25,8 +25,8 @@ const userSchema = new mongoose.Schema({
         type: String
     },
     address: String,
-    cart: [ObjectId],
-    orders: [ObjectId]
+    cart: [Object],
+    orders: [Object]
 })
 
 module.exports = mongoose.model("User", userSchema)
