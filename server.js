@@ -8,7 +8,7 @@ const Order = require("./Models/Order")
 const Product = require("./Models/Product")
 const Category = require("./Models/Category")
 
-mongoose.connect("mongodb://localhost:27017/ShopApp")
+mongoose.connect("mongodb+srv://shopApp:Fy6OpjfLwaaEV79D@bookings.owfjo.mongodb.net/ShopApp")
 .then(data => {
     console.log("Connected to mongo")
 })
