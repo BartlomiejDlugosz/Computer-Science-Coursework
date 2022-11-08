@@ -73,12 +73,16 @@ app.get("/manageproduct/all", async (req, res) => {
     res.render("manageproducts/all", {products})
 })
 
+app.get("/manageproduct/new", async (req, res) => {
+    const categories = await Category.find({})
+    res.render("manageproducts/new", {categories})
+})
+
 app.get("/manageproduct/:id", async(req, res) => {
     const {id} = req.params
     const product = await Product.findById(id)
     res.render("manageproducts/product", {product})
 })
-
 
 
 

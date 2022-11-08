@@ -1,0 +1,16 @@
+<%- include("partials/head", {title: "Manage Orders" }) %>
+    <% for (let order of orders) { %>
+        <div class="card" style="width: 18rem;">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <%= order.date %>
+                        </h5>
+                        <p class="card-text">
+                            <%= order.address %>
+                        </p>
+                        <a href="/manageorders/<%= order.id %>" class="btn btn-primary">Manage</a>
+                    </div>
+        </div>
+    <% } %> 
+</body>
+</html>
