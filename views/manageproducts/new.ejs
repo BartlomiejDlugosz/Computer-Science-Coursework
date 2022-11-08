@@ -1,17 +1,24 @@
 <%- include("partials/head", {title: "Create Product" }) %>
     <main class="container pt-3">
-        <form action="/products" method="POST" class="mb-5">
+        <form action="/products" method="POST" class="mb-5 needs-validation" novalidate>
             <div class="form-group row mb-3">
                 <label for="name" class="col-form-label col-sm-2">Name:</label>
                 <div class="col-sm-10">
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Name">
+                    <input type="text" name="name" id="name" class="form-control" placeholder="Name" required>
+                    <div class="invalid-feedback">
+                        Please enter a name
+                    </div>
                 </div>
             </div>
 
             <div class="form-group row mb-3">
                 <label for="price" class="col-form-label col-sm-2">Price:</label>
                 <div class="col-sm-10">
-                    <input type="number" name="price" id="price" step=0.01 class="form-control" placeholder="Price">
+                    <input type="number" name="price" id="price" step=0.01 class="form-control" placeholder="Price"
+                        required>
+                    <div class="invalid-feedback">
+                        Please enter a price
+                    </div>
                 </div>
             </div>
 
@@ -54,7 +61,10 @@
             <div class="form-group row mb-3">
                 <label for="stock" class="col-form-label col-sm-2">Stock:</label>
                 <div class="col-sm-10">
-                    <input type="number" name="stock" id="stock" step=1 class="form-control">
+                    <input type="number" name="stock" id="stock" step=1 class="form-control" required>
+                    <div class="invalid-feedback">
+                        Please enter the stock level
+                    </div>
                 </div>
             </div>
 
@@ -62,6 +72,25 @@
         </form>
         <a href="/manageproducts/all" class="btn btn-danger mb-3">Return to Products</a>
     </main>
+
+
+    <script>
+        (function () {
+            'use strict';
+            window.addEventListener('load', function () {
+                var forms = document.getElementsByClassName('needs-validation');
+                var validation = Array.prototype.filter.call(forms, function (form) {
+                    form.addEventListener('submit', function (event) {
+                        if (form.checkValidity() === false) {
+                            event.preventDefault();
+                            event.stopPropagation();
+                        }
+                        form.classList.add('was-validated');
+                    }, false);
+                });
+            }, false);
+        })();
+    </script>
     </body>
 
     </html>
