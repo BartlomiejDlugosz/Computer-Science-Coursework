@@ -1,17 +1,30 @@
-<%- include("partials/head", {title: "Manage Products" }) %>
-<a href="/manageproducts/new" class="btn btn-success">Create New Product</a>
-    <% for (let product of products) { %>
-        <div class="card" style="width: 18rem;">
-                    <div class="card-body">
-                        <h5 class="card-title">
-                            <%= product.name %>
-                        </h5>
-                        <p class="card-text">
-                            <%= product.description %>
-                        </p>
-                        <a href="/manageproducts/<%= product.id %>" class="btn btn-primary">Manage</a>
-                    </div>
+<%- include("../partials/head", {title: "Manage Products" }) %>
+    <main class="container">
+        <div class="d-flex justify-content-between">
+            <a href="/menu" class="btn btn-danger mb-5">Return to Menu</a>
+            <a href="/manageproducts/new" class="btn btn-success mb-5">New Product</a>
         </div>
-    <% } %> 
-</body>
-</html>
+        <div class="row">
+            <% for (let product of products) { %>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">
+                                <%= product.name %>
+                            </h5>
+                            <h6><b>£<%= product.price %></b>
+                            </h6>
+                            <p class="card-text">
+                                <%= product.description %>
+                            </p>
+                            <a href="/manageproducts/<%= product.id %>"
+                                class="btn btn-outline-primary mt-auto">Manage</a>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+        </div>
+    </main>
+    </body>
+
+    </html>

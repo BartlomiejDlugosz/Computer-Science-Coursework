@@ -53,14 +53,15 @@ app.post("/products", async (req, res) => {
 })
 
 app.patch("/products/:id", async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
     const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
-    const product = Product.findByIdAndUpdate(id, { name, price, description, images, discount, discountedPrice, categories, tags, stock }, {runValidators: true, new: true})
+    const product = await Product.findByIdAndUpdate(id, { name, price, description, images, discount, discountedPrice, categories, tags, stock }, { runValidators: true, new: true })
+    console.log(product)
     res.redirect("/manageproducts/all")
 })
 
 app.delete("/products/:id", async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
     const product = await Product.findByIdAndDelete(id)
     res.redirect("/manageproducts/all")
 })
@@ -83,34 +84,36 @@ app.post("/categories", async (req, res) => {
 
 
 
-app.get("/manageproduct/all", async (req, res) => {
+app.get("/manageproducts/all", async (req, res) => {
     const products = await Product.find({})
-    res.render("manageproducts/all", {products})
+    res.render("manageproducts/all", { products })
 })
 
-app.get("/manageproduct/new", async (req, res) => {
+app.get("/manageproducts/new", async (req, res) => {
     const categories = await Category.find({})
-    res.render("manageproducts/new", {categories})
+    res.render("manageproducts/new", { categories })
 })
 
-app.get("/manageproduct/:id", async(req, res) => {
-    const {id} = req.params
+app.get("/manageproducts/:id", async (req, res) => {
+    const { id } = req.params
+    const categories = await Category.find({})
     const product = await Product.findById(id)
-    res.render("manageproducts/product", {product})
+    console.log(categories)
+    res.render("manageproducts/product", { product, categories })
 })
 
 
 
 
-app.get("/manageorder/all", async (req, res) => {
+app.get("/manageorders/all", async (req, res) => {
     const orders = await Order.find({})
-    res.render("manageorders/all", {orders})
+    res.render("manageorders/all", { orders })
 })
 
-app.get("/manageorder/:id", async(req, res) => {
-    const {id} = req.params
+app.get("/manageorders/:id", async (req, res) => {
+    const { id } = req.params
     const order = await Order.findById(id)
-    res.render("manageorders/order", {order})
+    res.render("manageorders/order", { order })
 })
 
 app.listen(PORT, () => {
