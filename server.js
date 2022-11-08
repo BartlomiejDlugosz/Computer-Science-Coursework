@@ -68,6 +68,32 @@ app.post("/categories", async (req, res) => {
 
 
 
+app.get("/manageproduct/all", async (req, res) => {
+    const products = await Product.find({})
+    res.render("manageproducts/all", {products})
+})
+
+app.get("/manageproduct/:id", async(req, res) => {
+    const {id} = req.params
+    const product = await Product.findById(id)
+    res.render("manageproducts/product", {product})
+})
+
+
+
+
+
+app.get("/manageorder/all", async (req, res) => {
+    const orders = await Order.find({})
+    res.render("manageorders/all", {orders})
+})
+
+app.get("/manageorder/:id", async(req, res) => {
+    const {id} = req.params
+    const order = await Order.findById(id)
+    res.render("manageorders/order", {order})
+})
+
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}!`)
 })
