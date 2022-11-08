@@ -1,6 +1,7 @@
 const express = require("express")
 const mongoose = require("mongoose")
 const path = require("path")
+const methodOverride = require("method-override")
 const app = express()
 
 const User = require("./Models/User")
@@ -24,6 +25,7 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
+app.use(methodOverride("_method"))
 
 
 app.get("/", async (req, res) => {
@@ -44,10 +46,23 @@ app.get("/products", async (req, res) => {
 })
 
 app.post("/products", async (req, res) => {
-    const { name, price, description, images, discount, discountedPrice, categories, tags } = req.body
-    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories, tags })
+    const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
+    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories, tags, stock })
     await newProduct.save()
-    res.redirect("/products")
+    res.redirect("/manageproducts/all")
+})
+
+app.patch("/products/:id", async (req, res) => {
+    const {id} = req.params
+    const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
+    const product = Product.findByIdAndUpdate(id, { name, price, description, images, discount, discountedPrice, categories, tags, stock }, {runValidators: true, new: true})
+    res.redirect("/manageproducts/all")
+})
+
+app.delete("/products/:id", async (req, res) => {
+    const {id} = req.params
+    const product = await Product.findByIdAndDelete(id)
+    res.redirect("/manageproducts/all")
 })
 
 

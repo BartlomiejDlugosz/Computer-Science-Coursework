@@ -22,7 +22,13 @@ const productSchema = new mongoose.Schema({
         default: 0
     },
     categories: [Object],
-    tags: [String]
+    tags: [String],
+    stock: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0
+    }
 })
 
 module.exports = mongoose.model("Product", productSchema)

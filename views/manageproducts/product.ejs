@@ -1,0 +1,65 @@
+<%- include("partials/head", {title: "Manage Product" }) %>
+<main class="container pt-3">
+    <form action="/products" method="POST">
+        <div class="form-group row mb-3">
+            <label for="name" class="col-form-label col-sm-2">Name:</label>
+            <div class="col-sm-10">
+                <input type="text" name="name" id="name" class="form-control" placeholder="Name" value="<%= product.name %>">
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="price" class="col-form-label col-sm-2">Price:</label>
+            <div class="col-sm-10">
+                <input type="number" name="price" id="price" step=0.01 class="form-control" placeholder="Price" value=<%= product.price %>>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="description" class="col-form-label col-sm-2">Description:</label>
+            <div class="col-sm-10">
+                <textarea name="description" id="description" cols="30" rows="3" class="form-control"><%= product.description %></textarea>
+            </div>
+        </div>
+
+        <p>Images Coming Soon!</p>
+
+        <div class="form-group row mb-3">
+            <label for="discount" class="form-check-label col-sm-2">Discount:</label>
+            <div class="col-sm-10">
+                <input type="checkbox" name="discount" id="discount" class="form-check-input" <%= product.discount ? "checked" : "" %>>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="discountedPrice" class="col-form-label col-sm-2">Discounted Price:</label>
+            <div class="col-sm-10">
+                <input type="number" name="discountedPrice" id="discountedPrice" step=0.01 class="form-control" value="<%= product.discountedPrice %>">
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="categories" class="col-form-label sol-sm-2">Categories:</label>
+            <div class="col-sm-10">
+                <select multiple name="categories" id="categories" class="form-control">
+                    <% for (let category of categories) { %>
+                        <option value="<%= category.name %>" <%= product.categories.includes(category) ? "selected" : "" %> >
+                            <%= category.name %>
+                        </option>
+                        <% } %>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group row mb-3">
+            <label for="stock" class="col-form-label col-sm-2">Stock:</label>
+            <div class="col-sm-10">
+                <input type="number" name="stock" id="stock" step=1 class="form-control" value=<%= product.stock %>>
+            </div>
+        </div>
+
+        <button class="btn btn-primary mb-3">Save Product</button>
+    </form>
+    <a href="/manageproducts/all" class="btn btn-danger mb-3">Return to Products</a>
+</body>
+</html>
