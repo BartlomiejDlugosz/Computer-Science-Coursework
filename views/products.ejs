@@ -17,13 +17,15 @@
                                     <p class="card-text">
                                         <%= product.description %>
                                     </p>
-                                    <a href="#" class="btn btn-outline-primary mt-auto">Add to Cart</a>
+                                    <a href="" class="btn btn-outline-primary mt-auto addProduct" id="<%= product.id %>">Add to Cart</a>
                                 </div>
                     </div>
                 </div>
                 <% } %>
         </div>
     </main>
+
+    <script src="/js/cartManager.js"></script>
     </body>
 
     </html>
