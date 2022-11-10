@@ -27,6 +27,8 @@ app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(methodOverride("_method"))
 
+app.use(express.static(path.join(__dirname, "public")))
+
 
 app.get("/", async (req, res) => {
     const products = await Product.find({})
@@ -37,6 +39,12 @@ app.get("/menu", (req, res) => {
     res.render("menu")
 })
 
+
+app.get("/getProductInfo", async (req, res) => {
+    const {id} = req.query
+    const product = await Product.findById(id)
+    res.send(product)
+})
 
 
 
