@@ -2,24 +2,19 @@
 <main class="container">
 
 
-    <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
-        <div class="card h-100">
-            <% if (product.images[0]) { %>
-                <img src="<%= product.images[0] %>" class="card-img-top">
-                <% } %>
+    <template id="template">
+        <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
+            <div class="card h-100">
                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">
-                            <%= product.name %>
-                        </h5>
-                        <h6><b>£<%= product.price %></b>
+                        <h5 class="card-title name"></h5>
+                        <h6><b class="price"></b>
                         </h6>
-                        <p class="card-text">
-                            <%= product.description %>
-                        </p>
-                        <a href="" class="btn btn-outline-primary mt-auto addProduct" id="<%= product.id %>">Add to Cart</a>
+                        <p class="card-text description"></p>
+                        <a href="" class="btn btn-outline-primary mt-auto removeProduct">Remove from Cart</a>
                     </div>
+            </div>
         </div>
-    </div>
+    </template>
 
     
 </main>
