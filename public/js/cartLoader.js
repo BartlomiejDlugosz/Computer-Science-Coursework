@@ -1,4 +1,5 @@
 let cart = localStorage.getItem("cart")
+const container = document.querySelector(".container")
 const template = document.querySelector("#template")
 
 async function addItem(productId) {
@@ -21,6 +22,8 @@ async function addItem(productId) {
             }
             localStorage.setItem("cart", cart)
         })
+
+        container.appendChild(productDiv)
 
       }).catch(function() {
         console.log("Error Occured!");
