@@ -13,6 +13,7 @@ addButtons.forEach(button => {
             button.innerHTML = "Added"
             setTimeout(() => {
                 button.classList.remove("added")
+                button.innerHTML = "Add to Cart"
             }, 1000)
         }
     })

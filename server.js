@@ -40,6 +40,12 @@ app.get("/menu", (req, res) => {
 })
 
 
+app.get("/getProductInfo", async (req, res) => {
+    const {id} = req.query
+    const product = await Product.findById(id)
+    res.send(product)
+})
+
 
 
 app.get("/products", async (req, res) => {
