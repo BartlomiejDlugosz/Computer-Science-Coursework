@@ -47,8 +47,13 @@ app.get("/products", async (req, res) => {
 
 app.post("/products", async (req, res) => {
     const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
-    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories, tags, stock })
-    await newProduct.save()
+    let categoriesIds = []
+    for (let category of categories) {
+        let c = await Category.findOne({ name: category })
+        categoriesIds.push(c._id)
+    }
+    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories: categoriesIds, tags, stock })
+    const saved = await newProduct.save()
     res.redirect("/manageproducts/all")
 })
 
@@ -97,8 +102,8 @@ app.get("/manageproducts/new", async (req, res) => {
 app.get("/manageproducts/:id", async (req, res) => {
     const { id } = req.params
     const categories = await Category.find({})
-    const product = await Product.findById(id)
-    console.log(categories)
+    const product = await Product.findById(id).populate("categories")
+    console.log(product)
     res.render("manageproducts/product", { product, categories })
 })
 
