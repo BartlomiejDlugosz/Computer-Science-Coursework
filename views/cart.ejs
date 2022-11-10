@@ -1,10 +1,14 @@
 <%- include("partials/head", {title: "Cart" }) %>
-<main class="container">
+    <main class="container">
+        <h1 class="display-3">Cart</h1>
+        <div class="row">
+
+        </div>
 
 
-    <template id="template">
-        <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
-            <div class="card h-100">
+        <template id="template">
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
+                <div class="card h-100">
                     <div class="card-body d-flex flex-column">
                         <h5 class="card-title name"></h5>
                         <h6><b class="price"></b>
@@ -12,13 +16,14 @@
                         <p class="card-text description"></p>
                         <a href="" class="btn btn-outline-primary mt-auto removeProduct">Remove from Cart</a>
                     </div>
+                </div>
             </div>
-        </div>
-    </template>
+        </template>
 
-    
-</main>
 
-<script src="/js/cartLoader.js"></script>
-</body>
-</html>
+    </main>
+
+    <script src="/js/cartLoader.js"></script>
+    </body>
+
+    </html>
