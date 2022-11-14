@@ -31,8 +31,9 @@ app.use(express.static(path.join(__dirname, "public")))
 
 
 app.get("/", async (req, res) => {
+    const categories = await Category.find({})
     const products = await Product.find({})
-    res.render("homePage", { products })
+    res.render("homePage", { products, categories })
 })
 
 app.get("/menu", (req, res) => {
@@ -44,8 +45,8 @@ app.post("/getProductInfo", async (req, res) => {
     const products = req.body
     let newArray = []
     for (let product of products) {
-        product = await Product.findById(id)
-        newArray.push(product)
+        let found = await Product.findById(product)
+        newArray.push(found)
     }
     res.send(newArray)
 })
@@ -57,17 +58,18 @@ app.get("/cart", (req, res) => {
 
 app.post("/createOrder", async (req, res) => {
     const cart = req.body
-    const total = 0
+    let total = 0
     for (let productId of cart) {
         let product = await Product.findById(productId)
         total += product.price
     }
     const user = await User.findById("63721fca71717f4e4166b46e")
-    const newOrder = new Order({userId: user.id, productIds: cart, date: Date.now(), total, address: user.address, transactionId: "0", status: 1})
+    const newOrder = new Order({ userId: user.id, productIds: cart, date: Date.now(), total, address: user.address, transactionId: "0", status: 1 })
     await newOrder.save()
+    console.log(user)
     user.orders.push(newOrder)
     user.save()
-    res.send("Success")
+    res.send({ status: "Success" })
 })
 
 
@@ -115,10 +117,10 @@ app.post("/categories", async (req, res) => {
 })
 
 app.get("/categories/:id", async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
     const category = await Category.findById(id)
-    const products = await Product.find({categories: id})
-    res.render("products", {products, title: `${category.name}`})
+    const products = await Product.find({ categories: id })
+    res.render("products", { products, title: `${category.name}` })
 })
 
 
@@ -146,7 +148,15 @@ app.get("/manageproducts/:id", async (req, res) => {
 
 
 app.get("/manageorders/all", async (req, res) => {
-    const orders = await Order.find({})
+    const { status } = req.query
+    let orders
+    console.log(status)
+    if (status) {
+        orders = await Order.find({ status }).sort({ date: 1 })
+    } else {
+        orders = await Order.find({}).sort({ date: 1 })
+    }
+
     res.render("manageorders/all", { orders })
 })
 
