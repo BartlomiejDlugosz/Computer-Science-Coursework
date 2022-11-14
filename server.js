@@ -52,6 +52,8 @@ app.get("/cart", (req, res) => {
 })
 
 
+
+
 app.get("/products", async (req, res) => {
     const products = await Product.find({})
     res.render("products", { products })
@@ -59,12 +61,7 @@ app.get("/products", async (req, res) => {
 
 app.post("/products", async (req, res) => {
     const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
-    let categoriesIds = []
-    for (let category of categories) {
-        let c = await Category.findOne({ name: category })
-        categoriesIds.push(c._id)
-    }
-    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories: categoriesIds, tags, stock })
+    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories, tags, stock })
     const saved = await newProduct.save()
     res.redirect("/manageproducts/all")
 })
