@@ -41,7 +41,7 @@ app.get("/menu", (req, res) => {
 
 
 app.post("/getProductInfo", async (req, res) => {
-    const { products } = req.body
+    const products = req.body
     let newArray = []
     for (let product of products) {
         product = await Product.findById(id)
@@ -53,6 +53,21 @@ app.post("/getProductInfo", async (req, res) => {
 
 app.get("/cart", (req, res) => {
     res.render("cart")
+})
+
+app.post("/createOrder", async (req, res) => {
+    const cart = req.body
+    const total = 0
+    for (let productId of cart) {
+        let product = await Product.findById(productId)
+        total += product.price
+    }
+    const user = await User.findById("63721fca71717f4e4166b46e")
+    const newOrder = new Order({userId: user.id, productIds: cart, date: Date.now(), total, address: user.address, transactionId: "0", status: 1})
+    await newOrder.save()
+    user.orders.push(newOrder)
+    user.save()
+    res.send("Success")
 })
 
 

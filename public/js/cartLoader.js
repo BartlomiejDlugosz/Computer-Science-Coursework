@@ -1,4 +1,5 @@
 let cart = JSON.parse(localStorage.getItem("cart"))
+const order = document.querySelector("#order")
 const container = document.querySelector(".row")
 const template = document.querySelector("#template")
 
@@ -39,7 +40,30 @@ async function addItems() {
     }).catch(function () {
         console.log("Error Occured!");
     });
+
 }
+
+order.addEventListener("click", async () => {
+    cart = JSON.parse(localStorage.getItem("cart"))
+    fetch("/createOrder", {
+        method: 'POST',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cart)
+      })
+      .then(response => {
+        return response.json()
+      })
+      .then(data => {
+        cart = []
+        localStorage.setItem("cart", JSON.stringify(cart))
+        location.reload()
+      })
+})
+
+
 console.log(cart)
 if (cart && cart === []) {
     addItems()
