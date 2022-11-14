@@ -56,7 +56,7 @@ app.get("/cart", (req, res) => {
 
 app.get("/products", async (req, res) => {
     const products = await Product.find({})
-    res.render("products", { products })
+    res.render("products", { products, title: "All Products" })
 })
 
 app.post("/products", async (req, res) => {
@@ -93,6 +93,13 @@ app.post("/categories", async (req, res) => {
     const newCategory = new Category({ name, description })
     await newCategory.save()
     res.redirect("/categories")
+})
+
+app.get("/categories/:id", async (req, res) => {
+    const {id} = req.params
+    const category = await Category.findById(id)
+    const products = await Product.find({categories: id})
+    res.render("products", {products, title: `${category.name}`})
 })
 
 
