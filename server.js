@@ -40,10 +40,14 @@ app.get("/menu", (req, res) => {
 })
 
 
-app.get("/getProductInfo", async (req, res) => {
-    const { id } = req.query
-    const product = await Product.findById(id)
-    res.send(product)
+app.post("/getProductInfo", async (req, res) => {
+    const { products } = req.body
+    let newArray = []
+    for (let product of products) {
+        product = await Product.findById(id)
+        newArray.push(product)
+    }
+    res.send(newArray)
 })
 
 
