@@ -64,9 +64,9 @@ app.post("/createOrder", async (req, res) => {
         let product = await Product.findById(productId.id)
         if (product.stock >= productId.qty) {
             if (product.discount) {
-                total += product.discountedPrice
+                total += product.discountedPrice * productId.qty
             } else {
-                total += product.price
+                total += product.price * productId.qty
             }
         } else {
             valid = false
