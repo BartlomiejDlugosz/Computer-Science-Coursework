@@ -60,10 +60,14 @@ order.addEventListener("click", async () => {
     })
     .then(data => {
       console.log(data)
-      cart = []
+      if (data.status === "Success") {
+        cart = []
       localStorage.setItem("cart", JSON.stringify([]))
       console.log(JSON.parse(localStorage.getItem("cart")))
       location.reload()
+      } else {
+        console.log("Error occured")
+      }
     })
 })
 
