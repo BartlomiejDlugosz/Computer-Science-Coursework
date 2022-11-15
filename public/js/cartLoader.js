@@ -20,15 +20,15 @@ async function addItems() {
       for (let data of products) {
         productDiv = template.content.cloneNode(true)
 
-        productDiv.querySelector(".name").textContent = data.name
-        productDiv.querySelector(".price").textContent = `£${data.price}`
-        productDiv.querySelector(".description").textContent = data.description
-        productDiv.querySelector(".removeProduct").id = data._id
+        productDiv.querySelector(".name").textContent = data.product.name
+        productDiv.querySelector(".price").textContent = `£${data.product.price}`
+        productDiv.querySelector(".description").textContent = data.product.description
+        productDiv.querySelector(".qty").textContent = `Quantity: ${data.qty}`
+        productDiv.querySelector(".removeProduct").id = data.product._id
         productDiv.querySelector(".removeProduct").addEventListener("click", () => {
           cart = JSON.parse(localStorage.getItem("cart"))
           for (let i = 0; i < cart.length; i++) {
-            console.log(`${cart[i]} ${data._id}`)
-            if (cart[i] === data._id) {
+            if (cart[i].id === data.product._id) {
               cart.splice(i, 1)
               break
             }

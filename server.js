@@ -45,8 +45,8 @@ app.post("/getProductInfo", async (req, res) => {
     const products = req.body
     let newArray = []
     for (let product of products) {
-        let found = await Product.findById(product)
-        newArray.push(found)
+        let found = await Product.findById(product.id)
+        newArray.push({ product: found, qty: product.qty })
     }
     res.send(newArray)
 })
@@ -58,18 +58,36 @@ app.get("/cart", (req, res) => {
 
 app.post("/createOrder", async (req, res) => {
     const cart = req.body
+    let valid = true
     let total = 0
     for (let productId of cart) {
-        let product = await Product.findById(productId)
-        total += product.price
+        let product = await Product.findById(productId.id)
+        if (product.stock >= productId.qty) {
+            if (product.discount) {
+                total += product.discountedPrice
+            } else {
+                total += product.price
+            }
+        } else {
+            valid = false
+        }
     }
-    const user = await User.findById("63721fca71717f4e4166b46e")
-    const newOrder = new Order({ userId: user.id, productIds: cart, date: Date.now(), total, address: user.address, transactionId: "0", status: 1 })
-    await newOrder.save()
-    console.log(user)
-    user.orders.push(newOrder)
-    user.save()
-    res.send({ status: "Success" })
+    if (valid) {
+        const user = await User.findById("63721fca71717f4e4166b46e")
+        const newOrder = new Order({ userId: user.id, productIds: cart, date: Date.now(), total, address: user.address, transactionId: "0", status: 1 })
+        await newOrder.save()
+        user.orders.push(newOrder)
+        await user.save()
+
+        for (let productId of cart) {
+            let product = await Product.findById(productId.id)
+            product.stock -= productId.qty
+        }
+
+        res.send({ status: "Success" })
+    } else {
+        res.send({ status: "Error" })
+    }
 })
 
 
@@ -167,8 +185,8 @@ app.get("/manageorders/:id", async (req, res) => {
 })
 
 app.put("/manageorders/updatestatus/:id", async (req, res) => {
-    const {id} = req.params
-    const {status} = req.body
+    const { id } = req.params
+    const { status } = req.body
     const order = await Order.findById(id)
     order.status = status
     await order.save()
