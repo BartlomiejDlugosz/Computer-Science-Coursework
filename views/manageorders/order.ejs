@@ -44,7 +44,7 @@
             <form action="/manageorders/updatestatus/<%= order.id %>?_method=PUT" method="POST">
                 <div class="form-group row mb-3">
                     <label for="status" class="col-form-label col-sm-2">Status:</label>
-                    <div class="col-sm-10">
+                    <div class="col-sm-8">
                         <select name="status" id="status" class="form-control">
                             <option value="1" <%= order.status === 1 ? "selected" : "" %> >Not Started</option>
                             <option value="2" <%= order.status === 2 ? "selected" : "" %>>Dispatched</option>
