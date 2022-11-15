@@ -7,7 +7,17 @@ addButtons.forEach(button => {
         if (!button.classList.contains("added")) {
             button.classList.add("added")
             cart = JSON.parse(localStorage.getItem("cart")) || []
-            cart.push(button.id)
+            let found = false
+            for (let product of cart) {
+                if (product.id === button.id) {
+                    product.qty += 1
+                    found = true
+                    break
+                }
+            }
+            if (!found) {
+                cart.push({id: button.id, qty: 1})
+            }
             localStorage.setItem("cart", JSON.stringify(cart))
 
             button.innerHTML = "Added"
