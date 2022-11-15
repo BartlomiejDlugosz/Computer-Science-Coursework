@@ -1,6 +1,6 @@
 let cart = JSON.parse(localStorage.getItem("cart")) || []
 
-const addButtons = document.querySelectorAll("a.addProduct")
+const addButtons = document.querySelectorAll(".addProduct")
 
 addButtons.forEach(button => {
     button.addEventListener("click", () => {
@@ -16,7 +16,7 @@ addButtons.forEach(button => {
                 }
             }
             if (!found) {
-                cart.push({id: button.id, qty: 1})
+                cart.push({ id: button.id, qty: 1 })
             }
             localStorage.setItem("cart", JSON.stringify(cart))
 

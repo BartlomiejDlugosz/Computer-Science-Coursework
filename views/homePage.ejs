@@ -37,8 +37,9 @@
                                     <p class="card-text">
                                         <%= product.description %>
                                     </p>
-                                    <a href="#" class="btn btn-outline-primary mt-auto addProduct"
-                                        id="<%= product.id %>">Add to Cart</a>
+                                    <button class="btn btn-outline-primary mt-auto addProduct" id="<%= product.id %>"
+                                        <%=product.stock <=0 ? "disabled" : "" %>><%=product.stock <=0 ? "Out of Stock"
+                                            : "Add to Cart" %></button>
                                 </div>
                     </div>
                 </div>
