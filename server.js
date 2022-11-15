@@ -162,8 +162,17 @@ app.get("/manageorders/all", async (req, res) => {
 
 app.get("/manageorders/:id", async (req, res) => {
     const { id } = req.params
-    const order = await Order.findById(id)
+    const order = await Order.findById(id).populate("userId").populate("productIds")
     res.render("manageorders/order", { order })
+})
+
+app.put("/manageorders/updatestatus/:id", async (req, res) => {
+    const {id} = req.params
+    const {status} = req.body
+    const order = await Order.findById(id)
+    order.status = status
+    await order.save()
+    res.redirect(`/manageorders/${id}`)
 })
 
 app.listen(PORT, () => {

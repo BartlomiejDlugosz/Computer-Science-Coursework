@@ -1,0 +1,60 @@
+<%- include("../partials/head", {title: "Manage Product" }) %>
+    <main class="container pt-3">
+        <h2 class="display-5">Order Info</h2>
+        <div class="user-info">
+            <h3>User Info</h3>
+            <p>Name: <%= order.userId.name %>
+            </p>
+            <p>Email: <%= order.userId.email %>
+            </p>
+            <p>Phone: <%= order.userId.phone %>
+            </p>
+
+        </div>
+        <div class="order-info">
+            <h3>Order Info</h3>
+            <p>Date: <%= order.date.toLocaleString("en-UK") %>
+            </p>
+            <p>Address: <%= order.address %>
+            </p>
+            <p>Products:</p>
+            <div class="row">
+                <% for (let product of order.productIds) { %>
+                    <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <h5 class="card-title">
+                                    <%= product.name %>
+                                </h5>
+                                <h6><b>£<%= product.price %></b>
+                                </h6>
+                                <p class="card-text">
+                                    <%= product.description %>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <% } %>
+            </div>
+            <p>Total: <%= order.total %>
+            </p>
+            <form action="/manageorders/updatestatus/<%= order.id %>?_method=PUT" method="POST">
+                <div class="form-group row mb-3">
+                    <label for="status" class="col-form-label col-sm-2">Status:</label>
+                    <div class="col-sm-10">
+                        <select name="status" id="status" class="form-control">
+                            <option value="1" <%= order.status === 1 ? "selected" : "" %> >Not Started</option>
+                            <option value="2" <%= order.status === 2 ? "selected" : "" %>>Dispatched</option>
+                            <option value="3" <%= order.status === 3 ? "selected" : "" %>>Completed</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2">
+                        <button class="btn btn-success form-control">Set</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </main>
+    </body>
+
+    </html>
