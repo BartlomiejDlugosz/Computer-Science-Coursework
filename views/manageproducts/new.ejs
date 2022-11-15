@@ -1,5 +1,8 @@
 <%- include("../partials/head", {title: "Create Product" }) %>
     <main class="container pt-3">
+        <div class="d-flex justify-content-between">
+            <a href="/manageproducts/all" class="btn btn-danger mb-5">Return to Products</a>
+        </div>
         <form action="/products" method="POST" class="mb-5 needs-validation" novalidate>
             <div class="form-group row mb-3">
                 <label for="name" class="col-form-label col-sm-2">Name:</label>
