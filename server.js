@@ -82,6 +82,7 @@ app.post("/createOrder", async (req, res) => {
         for (let productId of cart) {
             let product = await Product.findById(productId.id)
             product.stock -= productId.qty
+            product.save()
         }
 
         res.send({ status: "Success" })
@@ -180,7 +181,9 @@ app.get("/manageorders/all", async (req, res) => {
 
 app.get("/manageorders/:id", async (req, res) => {
     const { id } = req.params
-    const order = await Order.findById(id).populate("userId").populate("productIds")
+    console.log(id)
+    const order = await Order.findById(id).populate("userId").populate("productIds.id")
+    console.log(order)
     res.render("manageorders/order", { order })
 })
 
