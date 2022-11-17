@@ -58,7 +58,7 @@ app.get("/cart", (req, res) => {
 
 app.post("/createOrder", async (req, res) => {
     const cart = req.body
-    let valid = true
+    let valid = {type: true, product: null}
     let total = 0
     for (let productId of cart) {
         let product = await Product.findById(productId.id)
@@ -69,10 +69,11 @@ app.post("/createOrder", async (req, res) => {
                 total += product.price * productId.qty
             }
         } else {
-            valid = false
+            valid.type = false
+            valid.product = product
         }
     }
-    if (valid) {
+    if (valid.type) {
         const user = await User.findById("63721fca71717f4e4166b46e")
         const newOrder = new Order({ userId: user.id, productIds: cart, date: Date.now(), total, address: user.address, transactionId: "0", status: 1 })
         await newOrder.save()
@@ -87,7 +88,7 @@ app.post("/createOrder", async (req, res) => {
 
         res.send({ status: "Success" })
     } else {
-        res.send({ status: "Error" })
+        res.render("error", {error: `The product "${valid.product.name}" is out of stock!`})
     }
 })
 
