@@ -49,6 +49,16 @@ async function addItems() {
 
 order.addEventListener("click", async () => {
   cart = JSON.parse(localStorage.getItem("cart"))
+  let items = document.querySelectorAll(".item")
+  items.forEach(item => {
+    item.remove()
+  })
+
+  let info = document.createElement("p")
+  info.classList.add("lead")
+  info.textContent = "Processing your order..."
+  container.appendChild(info)
+
   fetch("/createOrder", {
     method: 'POST',
     headers: {
@@ -63,11 +73,11 @@ order.addEventListener("click", async () => {
     .then(data => {
       console.log(data)
       if (data.status === "Success") {
+        info.textContent = "Order placed successfully!"
         cart = []
-      localStorage.setItem("cart", JSON.stringify([]))
-      console.log(JSON.parse(localStorage.getItem("cart")))
-      location.reload()
+        localStorage.setItem("cart", JSON.stringify([]))
       } else {
+        info.textContent = data.errorMessage
         console.log("Error occured")
       }
     })
