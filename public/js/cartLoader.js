@@ -3,6 +3,17 @@ const order = document.querySelector("#order")
 const container = document.querySelector(".row")
 const template = document.querySelector("#template")
 
+function removeFromCart(id) {
+  cart = JSON.parse(localStorage.getItem("cart"))
+  for (let i = 0; i < cart.length; i++) {
+    if (cart[i].id === id) {
+      cart.splice(i, 1)
+      break
+    }
+  }
+  localStorage.setItem("cart", JSON.stringify(cart))
+}
+
 async function addItems() {
   console.log("ADDING")
   fetch("/getProductInfo", {
@@ -24,16 +35,9 @@ async function addItems() {
         productDiv.querySelector(".price").textContent = `£${data.product.price}`
         productDiv.querySelector(".description").textContent = data.product.description
         productDiv.querySelector(".qty").textContent = `Quantity: ${data.qty}`
-        productDiv.querySelector(".removeProduct").id = data.product._id
+        productDiv.querySelector(".removeProduct").id = data.product.id
         productDiv.querySelector(".removeProduct").addEventListener("click", () => {
-          cart = JSON.parse(localStorage.getItem("cart"))
-          for (let i = 0; i < cart.length; i++) {
-            if (cart[i].id === data.product._id) {
-              cart.splice(i, 1)
-              break
-            }
-          }
-          localStorage.setItem("cart", JSON.stringify(cart))
+          removeFromCart(data.product.id)
         })
 
         container.appendChild(productDiv)
@@ -78,13 +82,7 @@ order.addEventListener("click", async () => {
         localStorage.setItem("cart", JSON.stringify([]))
       } else if (data.status === "Out of stock") {
         info.textContent = data.errorMessage
-          for (let i = 0; i < cart.length; i++) {
-            if (cart[i].id === data.product.id) {
-              cart.splice(i, 1)
-              break
-            }
-          }
-          localStorage.setItem("cart", JSON.stringify(cart))
+        removeFromCart(data.product.id)
         console.log("Error occured")
       }
     })
