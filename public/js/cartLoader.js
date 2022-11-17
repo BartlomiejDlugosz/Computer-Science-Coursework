@@ -76,8 +76,15 @@ order.addEventListener("click", async () => {
         info.textContent = "Order placed successfully!"
         cart = []
         localStorage.setItem("cart", JSON.stringify([]))
-      } else {
+      } else if (data.status === "Out of stock") {
         info.textContent = data.errorMessage
+          for (let i = 0; i < cart.length; i++) {
+            if (cart[i].id === data.product.id) {
+              cart.splice(i, 1)
+              break
+            }
+          }
+          localStorage.setItem("cart", JSON.stringify(cart))
         console.log("Error occured")
       }
     })
