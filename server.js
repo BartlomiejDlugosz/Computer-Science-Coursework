@@ -88,7 +88,7 @@ app.post("/createOrder", async (req, res) => {
 
         res.send({ status: "Success" })
     } else {
-        res.send({status: "Out of stock", errorMessage: `The product "${valid.product.name}" is out of stock, and has been removed from the cart for you.`, product})
+        res.send({status: "Out of stock", errorMessage: `The product "${valid.product.name}" is out of stock, and has been removed from the cart for you.`, product: valid.product})
     }
 })
 
