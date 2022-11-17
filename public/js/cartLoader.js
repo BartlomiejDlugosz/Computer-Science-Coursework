@@ -35,9 +35,9 @@ async function addItems() {
         productDiv.querySelector(".price").textContent = `£${data.product.price}`
         productDiv.querySelector(".description").textContent = data.product.description
         productDiv.querySelector(".qty").textContent = `Quantity: ${data.qty}`
-        productDiv.querySelector(".removeProduct").id = data.product.id
+        productDiv.querySelector(".removeProduct").id = data.product._id
         productDiv.querySelector(".removeProduct").addEventListener("click", () => {
-          removeFromCart(data.product.id)
+          removeFromCart(data.product._id)
         })
 
         container.appendChild(productDiv)
@@ -82,7 +82,7 @@ order.addEventListener("click", async () => {
         localStorage.setItem("cart", JSON.stringify([]))
       } else if (data.status === "Out of stock") {
         info.textContent = data.errorMessage
-        removeFromCart(data.product.id)
+        removeFromCart(data.product._id)
         console.log("Error occured")
       }
     })
