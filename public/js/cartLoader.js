@@ -39,6 +39,8 @@ async function addItems() {
         container.appendChild(productDiv)
       }
 
+      order.hidden = false
+
     }).catch(function () {
       console.log("Error Occured!");
     });
