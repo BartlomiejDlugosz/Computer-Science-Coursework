@@ -14,6 +14,16 @@ function removeFromCart(id) {
   localStorage.setItem("cart", JSON.stringify(cart))
 }
 
+function findInCart(id) {
+  cart = JSON.parse(localStorage.getItem("cart"))
+  for (let i = 0; i < cart.length; i++) {
+    if (cart[i].id === data.product._id) {
+      return cart[i]
+    }
+  }
+  return null
+}
+
 async function addItems() {
   console.log("ADDING")
   fetch("/getProductInfo", {
@@ -36,6 +46,23 @@ async function addItems() {
         productDiv.querySelector(".description").textContent = data.product.description
         productDiv.querySelector(".qty").textContent = `Quantity: ${data.qty}`
         productDiv.querySelector(".removeProduct").id = data.product._id
+
+        let buttons = productDiv.querySelectorAll(".change-quantity")
+        if (findInCart(data.product._id).qty === 1) buttons[0].disabled = true
+        if (findInCart(data.product._id).qty === data.product.stock) buttons[1].disabled = true
+
+        buttons[0].addEventListener("click", () => {
+          let product = findInCart(data.product._id)
+          product.qty -= 1
+          location.reload()
+        })
+        buttons[1].addEventListener("click", () => {
+          let product = findInCart(data.product._id)
+          product.qty += 1
+          location.reload()
+        })
+
+
         productDiv.querySelector(".removeProduct").addEventListener("click", () => {
           removeFromCart(data.product._id)
         })
