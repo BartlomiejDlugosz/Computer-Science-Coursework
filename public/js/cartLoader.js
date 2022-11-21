@@ -40,6 +40,7 @@ async function addItems() {
       console.log(products)
       for (let data of products) {
         productDiv = template.content.cloneNode(true)
+        productDiv.id = data.product._id
 
         productDiv.querySelector(".name").textContent = data.product.name
         productDiv.querySelector(".price").textContent = `£${data.product.price}`
