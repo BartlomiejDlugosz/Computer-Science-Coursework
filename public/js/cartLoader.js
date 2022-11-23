@@ -3,6 +3,10 @@ const order = document.querySelector("#order")
 const container = document.querySelector(".row")
 const template = document.querySelector("#template")
 
+function saveCart() {
+  localStorage.setItem("cart", JSON.stringify(cart))
+}
+
 function removeFromCart(id) {
   cart = JSON.parse(localStorage.getItem("cart"))
   for (let i = 0; i < cart.length; i++) {
@@ -17,7 +21,7 @@ function removeFromCart(id) {
 function findInCart(id) {
   cart = JSON.parse(localStorage.getItem("cart"))
   for (let i = 0; i < cart.length; i++) {
-    if (cart[i].id === data.product._id) {
+    if (cart[i].id === id) {
       return cart[i]
     }
   }
@@ -50,16 +54,19 @@ async function addItems() {
 
         let buttons = productDiv.querySelectorAll(".change-quantity")
         if (findInCart(data.product._id).qty === 1) buttons[0].disabled = true
-        if (findInCart(data.product._id).qty === data.product.stock) buttons[1].disabled = true
+        if (findInCart(data.product._id).qty >= data.product.stock) buttons[1].disabled = true
 
         buttons[0].addEventListener("click", () => {
           let product = findInCart(data.product._id)
           product.qty -= 1
+          saveCart()
           location.reload()
         })
         buttons[1].addEventListener("click", () => {
+          console.log("Adding one")
           let product = findInCart(data.product._id)
           product.qty += 1
+          saveCart()
           location.reload()
         })
 
@@ -73,8 +80,9 @@ async function addItems() {
 
       order.hidden = false
 
-    }).catch(function () {
+    }).catch(function (err) {
       console.log("Error Occured!");
+      console.log(err)
     });
 
 }
