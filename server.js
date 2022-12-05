@@ -18,7 +18,7 @@ mongoose.connect("MONGO_DB_LINK_REDACTED")
         console.log(err)
     })
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 
 
 app.set("view engine", "ejs")
@@ -58,7 +58,7 @@ app.get("/cart", (req, res) => {
 
 app.post("/createOrder", async (req, res) => {
     const cart = req.body
-    let valid = {type: true, product: null}
+    let valid = { type: true, product: null }
     let total = 0
     for (let productId of cart) {
         let product = await Product.findById(productId.id)
@@ -88,7 +88,7 @@ app.post("/createOrder", async (req, res) => {
 
         res.send({ status: "Success" })
     } else {
-        res.send({status: "Out of stock", errorMessage: `The product "${valid.product.name}" is out of stock, and has been removed from the cart for you.`, product: valid.product})
+        res.send({ status: "Out of stock", errorMessage: `The product "${valid.product.name}" is out of stock, and has been removed from the cart for you.`, product: valid.product })
     }
 })
 
