@@ -18,6 +18,7 @@ const productRoutes = require("./routes/products")
 const categoryRoutes = require("./routes/categories")
 const manageProductsRoute = require("./routes/manageProducts")
 const manageOrdersRoute = require("./routes/manageOrders")
+const cartRoutes = require("./routes/cart")
 
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
 
@@ -56,6 +57,16 @@ app.use(session(sessionOptions))
 app.use(flash())
 app.use(express.static(path.join(__dirname, "public")))
 
+app.use((req, res, next) => {
+    if (req.originalUrl === "/cart" || !req.originalUrl.includes("cart")) {
+        req.session.lastPage = req.originalUrl
+    }
+    req.session.cart = req.session.cart || []
+    res.locals.success = req.flash("success")
+    res.locals.error = req.flash("error")
+    next()
+})
+
 
 app.get("/", catchAsync(async (req, res) => {
     const categories = await Category.find({})
@@ -80,9 +91,14 @@ app.post("/getProductInfo", catchAsync(async (req, res) => {
 }))
 
 
-app.get("/cart", (req, res) => {
-    res.render("cart")
-})
+app.get("/cart", catchAsync(async (req, res) => {
+    let newArray = []
+    for (let product of req.session.cart) {
+        let found = await Product.findById(product.id)
+        newArray.push({ product: found, qty: product.qty })
+    }
+    res.render("cart", { cart: newArray })
+}))
 
 app.post("/createOrder", catchAsync(async (req, res) => {
     const cart = req.body
@@ -125,6 +141,7 @@ app.use("/products", productRoutes)
 app.use("/categories", categoryRoutes)
 app.use("/manageProducts", manageProductsRoute)
 app.use("/manageOrders", manageOrdersRoute)
+app.use("/cart", cartRoutes)
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404))

@@ -1,36 +1,27 @@
-<%- include("partials/head", {title: "Cart" }) %>
-    <main class="container">
-        <h1 class="display-3">Cart</h1>
-        <div class="row">
-
-        </div>
-
-
-        <template id="template">
-            <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center item">
-                <div class="card h-100">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title name"></h5>
-                        <h6><b class="price"></b>
-                        </h6>
-                        <p class="card-text description"></p>
-                        <div class="row text-center mb-2 gx-0">
-                            <div class="col-sm-2"><button class="btn btn-outline-primary change-quantity py-auto w-100">-</button></div>
-                            <p class="qty col-sm-8 my-auto">Quantity:</p>
-                            <div class="col-sm-2"><button class="btn btn-outline-primary change-quantity py-auto w-100">+</button></div>
-                        </div>
-                        <a href="" class="btn btn-outline-primary mt-auto removeProduct">Remove from Cart</a>
+<% layout("layouts/boilerplate") %>
+<h1 class="display-3">Cart</h1>
+<div class="row">
+    <% for (let item of cart) { %>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center item">
+        <div class="card h-100">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title name"><%= item.product.name %></h5>
+                <h6><b class="price"><%= item.product.price %></b></h6>
+                <p class="card-text description"><%= item.product.description %> </p>
+                <div class="row text-center mb-2 gx-0">
+                    <div class="col-sm-2"><a href="/cart/qty/remove/<%= item.product.id %>"
+                            class="btn btn-outline-primary change-quantity py-auto w-100">-</a>
+                    </div>
+                    <p class="qty col-sm-8 my-auto">Quantity: <%= item.qty %></p>
+                    <div class="col-sm-2"><a href="/cart/qty/add/<%= item.product.id %>"
+                            class="btn btn-outline-primary change-quantity py-auto w-100">+</a>
                     </div>
                 </div>
+                <a href="" class="btn btn-outline-primary mt-auto removeProduct">Remove from Cart</a>
             </div>
-        </template>
+        </div>
+    </div>
+    <% } %>
+</div>
 
-        <a href="#" class="btn btn-success" id="order" hidden>Order</a>
-
-
-    </main>
-
-    <script src="/js/cartLoader.js"></script>
-    </body>
-
-    </html>
+<a href="#" class="btn btn-success" id="order" hidden>Order</a>

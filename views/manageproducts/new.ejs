@@ -1,99 +1,74 @@
-<%- include("../partials/head", {title: "New Product" }) %>
-    <main class="container pt-3">
-        <div class="d-flex justify-content-between">
-            <a href="/manageproducts/all" class="btn btn-danger mb-5">Return to Products</a>
+<% layout("layouts/boilerplate") %>
+<div class="d-flex justify-content-between">
+    <a href="/manageproducts/all" class="btn btn-danger mb-5">Return to Products</a>
+</div>
+<form action="/products" method="POST" class="mb-5 needs-validation" novalidate>
+    <div class="form-group row mb-3">
+        <label for="name" class="col-form-label col-sm-2">Name:</label>
+        <div class="col-sm-10">
+            <input type="text" name="name" id="name" class="form-control" placeholder="Name" required>
+            <div class="invalid-feedback">
+                Please enter a name
+            </div>
         </div>
-        <form action="/products" method="POST" class="mb-5 needs-validation" novalidate>
-            <div class="form-group row mb-3">
-                <label for="name" class="col-form-label col-sm-2">Name:</label>
-                <div class="col-sm-10">
-                    <input type="text" name="name" id="name" class="form-control" placeholder="Name" required>
-                    <div class="invalid-feedback">
-                        Please enter a name
-                    </div>
-                </div>
+    </div>
+
+    <div class="form-group row mb-3">
+        <label for="price" class="col-form-label col-sm-2">Price:</label>
+        <div class="col-sm-10">
+            <input type="number" name="price" id="price" step=0.01 class="form-control" placeholder="Price" required>
+            <div class="invalid-feedback">
+                Please enter a price
             </div>
+        </div>
+    </div>
 
-            <div class="form-group row mb-3">
-                <label for="price" class="col-form-label col-sm-2">Price:</label>
-                <div class="col-sm-10">
-                    <input type="number" name="price" id="price" step=0.01 class="form-control" placeholder="Price"
-                        required>
-                    <div class="invalid-feedback">
-                        Please enter a price
-                    </div>
-                </div>
+    <div class="form-group row mb-3">
+        <label for="description" class="col-form-label col-sm-2">Description:</label>
+        <div class="col-sm-10">
+            <textarea name="description" id="description" cols="30" rows="3" class="form-control"></textarea>
+        </div>
+    </div>
+
+    <p>Images Coming Soon!</p>
+
+    <div class="form-group row mb-3">
+        <label for="discount" class="form-check-label col-sm-2">Discount:</label>
+        <div class="col-sm-10">
+            <input type="checkbox" name="discount" id="discount" class="form-check-input">
+        </div>
+    </div>
+
+    <div class="form-group row mb-3">
+        <label for="discountedprice" class="col-form-label col-sm-2">Discounted Price:</label>
+        <div class="col-sm-10">
+            <input type="number" name="discountedprice" id="discountedprice" step=0.01 class="form-control">
+        </div>
+    </div>
+
+    <div class="form-group row mb-3">
+        <label for="categories" class="col-form-label sol-sm-2">Categories:</label>
+        <div class="col-sm-10">
+            <select multiple name="categories[]" id="categories" class="form-control">
+                <% for (let category of categories) { %>
+                <option value="<%= category.id %>">
+                    <%= category.name %>
+                </option>
+                <% } %>
+            </select>
+        </div>
+    </div>
+
+    <div class="form-group row mb-3">
+        <label for="stock" class="col-form-label col-sm-2">Stock:</label>
+        <div class="col-sm-10">
+            <input type="number" name="stock" id="stock" step=1 class="form-control" required>
+            <div class="invalid-feedback">
+                Please enter the stock level
             </div>
+        </div>
+    </div>
 
-            <div class="form-group row mb-3">
-                <label for="description" class="col-form-label col-sm-2">Description:</label>
-                <div class="col-sm-10">
-                    <textarea name="description" id="description" cols="30" rows="3" class="form-control"></textarea>
-                </div>
-            </div>
-
-            <p>Images Coming Soon!</p>
-
-            <div class="form-group row mb-3">
-                <label for="discount" class="form-check-label col-sm-2">Discount:</label>
-                <div class="col-sm-10">
-                    <input type="checkbox" name="discount" id="discount" class="form-check-input">
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label for="discountedprice" class="col-form-label col-sm-2">Discounted Price:</label>
-                <div class="col-sm-10">
-                    <input type="number" name="discountedprice" id="discountedprice" step=0.01 class="form-control">
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label for="categories" class="col-form-label sol-sm-2">Categories:</label>
-                <div class="col-sm-10">
-                    <select multiple name="categories[]" id="categories" class="form-control">
-                        <% for (let category of categories) { %>
-                            <option value="<%= category.id %>">
-                                <%= category.name %>
-                            </option>
-                            <% } %>
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group row mb-3">
-                <label for="stock" class="col-form-label col-sm-2">Stock:</label>
-                <div class="col-sm-10">
-                    <input type="number" name="stock" id="stock" step=1 class="form-control" required>
-                    <div class="invalid-feedback">
-                        Please enter the stock level
-                    </div>
-                </div>
-            </div>
-
-            <button class="btn btn-primary form-control">Add Product</button>
-        </form>
-        <a href="/manageproducts/all" class="btn btn-danger mb-3">Return to Products</a>
-    </main>
-
-
-    <script>
-        (function () {
-            'use strict';
-            window.addEventListener('load', function () {
-                var forms = document.getElementsByClassName('needs-validation');
-                var validation = Array.prototype.filter.call(forms, function (form) {
-                    form.addEventListener('submit', function (event) {
-                        if (form.checkValidity() === false) {
-                            event.preventDefault();
-                            event.stopPropagation();
-                        }
-                        form.classList.add('was-validated');
-                    }, false);
-                });
-            }, false);
-        })();
-    </script>
-    </body>
-
-    </html>
+    <button class="btn btn-primary form-control">Add Product</button>
+</form>
+<a href="/manageproducts/all" class="btn btn-danger mb-3">Return to Products</a>
