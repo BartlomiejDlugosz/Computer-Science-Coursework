@@ -14,6 +14,7 @@ router.post("/", catchAsync(async (req, res) => {
     const { name, description } = req.body
     const newCategory = new Category({ name, description })
     await newCategory.save()
+    req.flash("success", "Successfully created category!")
     res.redirect("/categories")
 }))
 
