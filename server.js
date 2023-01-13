@@ -2,12 +2,22 @@ const express = require("express")
 const mongoose = require("mongoose")
 const path = require("path")
 const methodOverride = require("method-override")
+const ejsMate = require("ejs-mate")
+const cookieParser = require("cookie-parser")
+const session = require("express-session")
+const flash = require("connect-flash")
+
 const app = express()
 
 const User = require("./Models/User")
 const Order = require("./Models/Order")
 const Product = require("./Models/Product")
 const Category = require("./Models/Category")
+
+const productRoutes = require("./routes/products")
+const categoryRoutes = require("./routes/categories")
+const manageProductsRoute = require("./routes/manageProducts")
+const manageOrdersRoute = require("./routes/manageOrders")
 
 mongoose.connect("MONGO_DB_LINK_REDACTED")
     .then(data => {
@@ -20,19 +30,35 @@ mongoose.connect("MONGO_DB_LINK_REDACTED")
 
 const PORT = process.env.PORT || 3000
 
+const sessionOptions = {
+    secret: "secret",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
+        maxAge: 1000 * 60 * 60 * 24 * 7
+    }
+}
+
+app.engine("ejs", ejsMate)
 
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
+
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use(methodOverride("_method"))
-
+app.use(cookieParser())
+app.use(session(sessionOptions))
+app.use(flash())
 app.use(express.static(path.join(__dirname, "public")))
 
 
 app.get("/", async (req, res) => {
     const categories = await Category.find({})
     const products = await Product.find({})
+
     res.render("homePage", { products, categories })
 })
 
@@ -93,109 +119,10 @@ app.post("/createOrder", async (req, res) => {
 })
 
 
-
-
-app.get("/products", async (req, res) => {
-    const products = await Product.find({})
-    res.render("products", { products, title: "All Products" })
-})
-
-app.post("/products", async (req, res) => {
-    const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
-    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories, tags, stock })
-    const saved = await newProduct.save()
-    res.redirect("/manageproducts/all")
-})
-
-app.patch("/products/:id", async (req, res) => {
-    const { id } = req.params
-    const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
-    const product = await Product.findByIdAndUpdate(id, { name, price, description, images, discount, discountedPrice, categories, tags, stock }, { runValidators: true, new: true })
-    console.log(product)
-    res.redirect("/manageproducts/all")
-})
-
-app.delete("/products/:id", async (req, res) => {
-    const { id } = req.params
-    const product = await Product.findByIdAndDelete(id)
-    res.redirect("/manageproducts/all")
-})
-
-
-
-
-app.get("/categories", async (req, res) => {
-    const categories = await Category.find({})
-    res.render("categories", { categories })
-})
-
-app.post("/categories", async (req, res) => {
-    const { name, description } = req.body
-    const newCategory = new Category({ name, description })
-    await newCategory.save()
-    res.redirect("/categories")
-})
-
-app.get("/categories/:id", async (req, res) => {
-    const { id } = req.params
-    const category = await Category.findById(id)
-    const products = await Product.find({ categories: id })
-    res.render("products", { products, title: `${category.name}` })
-})
-
-
-
-
-app.get("/manageproducts/all", async (req, res) => {
-    const products = await Product.find({})
-    res.render("manageproducts/all", { products })
-})
-
-app.get("/manageproducts/new", async (req, res) => {
-    const categories = await Category.find({})
-    res.render("manageproducts/new", { categories })
-})
-
-app.get("/manageproducts/:id", async (req, res) => {
-    const { id } = req.params
-    const categories = await Category.find({})
-    const product = await Product.findById(id).populate("categories")
-    console.log(product)
-    res.render("manageproducts/product", { product, categories })
-})
-
-
-
-
-app.get("/manageorders/all", async (req, res) => {
-    const { status } = req.query
-    let orders
-    console.log(status)
-    if (status) {
-        orders = await Order.find({ status }).sort({ date: 1 })
-    } else {
-        orders = await Order.find({}).sort({ date: 1 })
-    }
-
-    res.render("manageorders/all", { orders })
-})
-
-app.get("/manageorders/:id", async (req, res) => {
-    const { id } = req.params
-    console.log(id)
-    const order = await Order.findById(id).populate("userId").populate("productIds.id")
-    console.log(order)
-    res.render("manageorders/order", { order })
-})
-
-app.put("/manageorders/updatestatus/:id", async (req, res) => {
-    const { id } = req.params
-    const { status } = req.body
-    const order = await Order.findById(id)
-    order.status = status
-    await order.save()
-    res.redirect(`/manageorders/${id}`)
-})
+app.use("/products", productRoutes)
+app.use("/categories", categoryRoutes)
+app.use("/manageProducts", manageProductsRoute)
+app.use("/manageOrders", manageOrdersRoute)
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}!`)
