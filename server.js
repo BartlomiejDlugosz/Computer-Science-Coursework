@@ -19,6 +19,8 @@ const categoryRoutes = require("./routes/categories")
 const manageProductsRoute = require("./routes/manageProducts")
 const manageOrdersRoute = require("./routes/manageOrders")
 
+const { catchAsync, ExpressError } = require("./utils/errorhandling")
+
 mongoose.connect("mongodb+srv://shopApp:Fy6OpjfLwaaEV79D@bookings.owfjo.mongodb.net/ShopApp")
     .then(data => {
         console.log("Connected to mongo")
@@ -55,19 +57,19 @@ app.use(flash())
 app.use(express.static(path.join(__dirname, "public")))
 
 
-app.get("/", async (req, res) => {
+app.get("/", catchAsync(async (req, res) => {
     const categories = await Category.find({})
     const products = await Product.find({})
 
     res.render("homePage", { products, categories })
-})
+}))
 
 app.get("/menu", (req, res) => {
     res.render("menu")
 })
 
 
-app.post("/getProductInfo", async (req, res) => {
+app.post("/getProductInfo", catchAsync(async (req, res) => {
     const products = req.body
     let newArray = []
     for (let product of products) {
@@ -75,14 +77,14 @@ app.post("/getProductInfo", async (req, res) => {
         newArray.push({ product: found, qty: product.qty })
     }
     res.send(newArray)
-})
+}))
 
 
 app.get("/cart", (req, res) => {
     res.render("cart")
 })
 
-app.post("/createOrder", async (req, res) => {
+app.post("/createOrder", catchAsync(async (req, res) => {
     const cart = req.body
     let valid = { type: true, product: null }
     let total = 0
@@ -116,13 +118,23 @@ app.post("/createOrder", async (req, res) => {
     } else {
         res.send({ status: "Out of stock", errorMessage: `The product "${valid.product.name}" is out of stock, and has been removed from the cart for you.`, product: valid.product })
     }
-})
+}))
 
 
 app.use("/products", productRoutes)
 app.use("/categories", categoryRoutes)
 app.use("/manageProducts", manageProductsRoute)
 app.use("/manageOrders", manageOrdersRoute)
+
+app.all("*", (req, res, next) => {
+    next(new ExpressError("Page Not Found", 404))
+})
+
+app.use((error, req, res, next) => {
+    const { status = 500 } = error
+    if (!error.message) error.message = "Oh no, Something went wrong!"
+    res.status(status).render("error", { error })
+})
 
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}!`)
