@@ -19,6 +19,7 @@ const categoryRoutes = require("./routes/categories")
 const manageProductsRoute = require("./routes/manageProducts")
 const manageOrdersRoute = require("./routes/manageOrders")
 const cartRoutes = require("./routes/cart")
+const userRoutes = require("./routes/user")
 
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
 
@@ -58,10 +59,9 @@ app.use(flash())
 app.use(express.static(path.join(__dirname, "public")))
 
 app.use((req, res, next) => {
-    if (req.originalUrl === "/cart" || !req.originalUrl.includes("cart")) {
-        req.session.lastPage = req.originalUrl
-    }
     req.session.cart = req.session.cart || []
+    res.locals.user = req.session.user
+    res.locals.url = req.originalUrl
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
     next()
@@ -142,12 +142,17 @@ app.use("/categories", categoryRoutes)
 app.use("/manageProducts", manageProductsRoute)
 app.use("/manageOrders", manageOrdersRoute)
 app.use("/cart", cartRoutes)
+app.use("/", userRoutes)
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404))
 })
 
 app.use((error, req, res, next) => {
+    if (req.originalUrl === "/register") {
+        req.flash("error", error.message)
+        return res.redirect("/register")
+    }
     const { status = 500 } = error
     if (!error.message) error.message = "Oh no, Something went wrong!"
     res.status(status).render("error", { error })

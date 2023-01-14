@@ -9,19 +9,24 @@
                 <h6><b class="price"><%= item.product.price %></b></h6>
                 <p class="card-text description"><%= item.product.description %> </p>
                 <div class="row text-center mb-2 gx-0">
-                    <div class="col-sm-2"><a href="/cart/qty/remove/<%= item.product.id %>"
-                            class="btn btn-outline-primary change-quantity py-auto w-100">-</a>
+                    <div class="col-sm-2"><a href="/cart/qty/remove/<%= item.product.id %>?redirect=<%= url %>"
+                            class="btn btn-outline-primary change-quantity py-auto w-100 <%= item.qty === 1 ? 'disabled' : '' %>">-</a>
                     </div>
                     <p class="qty col-sm-8 my-auto">Quantity: <%= item.qty %></p>
-                    <div class="col-sm-2"><a href="/cart/qty/add/<%= item.product.id %>"
-                            class="btn btn-outline-primary change-quantity py-auto w-100">+</a>
+                    <div class="col-sm-2"><a href="/cart/qty/add/<%= item.product.id %>?redirect=<%= url %>"
+                            class="btn btn-outline-primary change-quantity py-auto w-100 <%= item.product.stock === item.qty ? 'disabled' : '' %>">+</a>
                     </div>
                 </div>
-                <a href="" class="btn btn-outline-primary mt-auto removeProduct">Remove from Cart</a>
+                <a href="/cart/remove/<%= item.product.id %>?redirect=<%= url %>"
+                    class="btn btn-outline-primary mt-auto removeProduct">Remove from Cart</a>
             </div>
         </div>
     </div>
     <% } %>
 </div>
 
-<a href="#" class="btn btn-success" id="order" hidden>Order</a>
+<% if (cart.length > 0) { %>
+<a href="#" class="btn btn-success" id="order">Order</a>
+<% } else { %>
+<p class="lead">Sorry, but you don't have any products in your cart</p>
+<% } %>
