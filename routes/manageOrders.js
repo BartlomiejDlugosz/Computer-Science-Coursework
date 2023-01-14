@@ -11,7 +11,6 @@ router.use(isStaff)
 router.get("/all", catchAsync(async (req, res) => {
     const { status } = req.query
     let orders
-    console.log(status)
     if (status) {
         orders = await Order.find({ status }).sort({ date: 1 })
     } else {
@@ -23,9 +22,7 @@ router.get("/all", catchAsync(async (req, res) => {
 
 router.get("/:id", catchAsync(async (req, res) => {
     const { id } = req.params
-    console.log(id)
     const order = await Order.findById(id).populate("userId").populate("productIds.id")
-    console.log(order)
     res.render("manageorders/order", { order })
 }))
 
