@@ -53,7 +53,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     const line_items = []
     const cart = req.user ? req.user.cart : req.session.cart
     for (let product of cart) {
-        const found = await Product.findById(product.productId)
+        const found = await Product.findById(product.productId.toString())
         if (found) {
             line_items.push({
                 price_data: {
@@ -63,7 +63,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
                         description: found.description,
                         metadata: { id: found.id }
                     },
-                    unit_amount: found.discount ? found.discountedPrice * 100 : found.price * 100
+                    unit_amount: Math.round(found.discount ? found.discountedPrice * 100 : found.price * 100)
                 },
                 quantity: product.qty
             })
