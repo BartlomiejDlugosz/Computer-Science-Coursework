@@ -4,6 +4,10 @@ const router = express.Router()
 const Product = require("../Models/Product")
 const Category = require("../Models/Category")
 const { catchAsync, ExpressError } = require("../utils/errorhandling")
+const { isLoggedIn, isStaff } = require("../utils/middleware")
+
+router.use(isLoggedIn)
+router.use(isStaff)
 
 router.get("/all", catchAsync(async (req, res) => {
     const products = await Product.find({})

@@ -58,20 +58,22 @@ app.use(session(sessionOptions))
 app.use(flash())
 app.use(express.static(path.join(__dirname, "public")))
 
-app.use((req, res, next) => {
+app.use(catchAsync(async (req, res, next) => {
     req.session.cart = req.session.cart || []
-    res.locals.user = req.session.user
+    const user = await User.findById(req.session.userId) || null
+    req.user = user
+    res.locals.user = user
     res.locals.url = req.originalUrl
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
     next()
-})
+}))
 
 
 app.get("/", catchAsync(async (req, res) => {
     const categories = await Category.find({})
     const products = await Product.find({})
-
+    console.log(req.user)
     res.render("homePage", { products, categories })
 }))
 
