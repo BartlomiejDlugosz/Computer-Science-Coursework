@@ -3,6 +3,10 @@ const router = express.Router()
 
 const Order = require("../Models/Order")
 const { catchAsync, ExpressError } = require("../utils/errorhandling")
+const { isLoggedIn, isStaff } = require("../utils/middleware")
+
+router.use(isLoggedIn)
+router.use(isStaff)
 
 router.get("/all", catchAsync(async (req, res) => {
     const { status } = req.query

@@ -4,13 +4,14 @@ const router = express.Router()
 const Product = require("../Models/Product")
 const Category = require("../Models/Category")
 const { catchAsync, ExpressError } = require("../utils/errorhandling")
+const { isLoggedIn, isStaff } = require("../utils/middleware")
 
 router.get("/", catchAsync(async (req, res) => {
     const categories = await Category.find({})
     res.render("categories", { categories })
 }))
 
-router.post("/", catchAsync(async (req, res) => {
+router.post("/", isLoggedIn, isStaff, catchAsync(async (req, res) => {
     const { name, description } = req.body
     const newCategory = new Category({ name, description })
     await newCategory.save()

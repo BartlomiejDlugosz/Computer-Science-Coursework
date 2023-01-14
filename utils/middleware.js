@@ -21,3 +21,20 @@ module.exports.validateUser = async (req, res, next) => {
     }
     next()
 }
+
+module.exports.isLoggedIn = (req, res, next) => {
+    if (req.user) {
+        return next()
+    }
+    req.session.previousUrl = req.originalUrl
+    req.flash("error", "You have to be logged first!")
+    res.redirect("/login")
+}
+
+module.exports.isStaff = (req, res, next) => {
+    if (req.user.permLvl >= 2) {
+        next()
+    }
+    req.flash("error", "You are not authorized to do that!")
+    res.redirect("/")
+}
