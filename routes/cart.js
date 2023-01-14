@@ -23,7 +23,7 @@ router.get("/add/:id", catchAsync(async (req, res) => {
         if (product.stock > 0) {
             let found = false
             for (let item of cart) {
-                if (item.productId === product.id) {
+                if (item.productId.toString() === product.id) {
                     if (item.qty >= product.stock) {
                         req.flash("error", "You have too many of this product in your cart!")
                         return res.redirect(redirect)
@@ -38,6 +38,7 @@ router.get("/add/:id", catchAsync(async (req, res) => {
             }
             req.session.cart = cart
             if (req.user) {
+                req.user.cart = cart
                 await req.user.save()
             }
             req.flash("success", "Successfully added to cart!")
@@ -57,7 +58,7 @@ router.get("/qty/:op/:id", catchAsync(async (req, res) => {
     const product = await Product.findById(id)
     const cart = req.user ? req.user.cart : req.session.cart
     for (let i = 0; i < cart.length; i++) {
-        if (cart[i].productId === id) {
+        if (cart[i].productId.toString() === id) {
             cart[i].qty = op === "add" ? cart[i].qty + 1 : cart[i].qty - 1
             if (cart[i].qty > product.stock) {
                 cart[i].qty = product.stock
@@ -70,6 +71,7 @@ router.get("/qty/:op/:id", catchAsync(async (req, res) => {
         }
     }
     if (req.user) {
+        req.user.cart = cart
         await req.user.save()
     }
     res.redirect(redirect)
@@ -80,13 +82,16 @@ router.get("/remove/:id", catchAsync(async (req, res) => {
     const { redirect = "/" } = req.query
     const cart = req.user ? req.user.cart : req.session.cart
     for (let i = 0; i < cart.length; i++) {
-        if (cart[i].productId === id) {
+        if (cart[i].productId.toString() === id) {
             cart.splice(i, 1)
             break
         }
     }
     if (req.user) {
+        console.log(cart)
+        req.user.cart = cart
         await req.user.save()
+        console.log(req.user)
     }
     res.redirect(redirect)
 }))
