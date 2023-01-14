@@ -13,6 +13,7 @@ router.post("/", catchAsync(async (req, res) => {
     const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
     const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories, tags, stock })
     const saved = await newProduct.save()
+    req.flash("success", "Successfully created product!")
     res.redirect("/manageproducts/all")
 }))
 
@@ -20,13 +21,14 @@ router.patch("/:id", catchAsync(async (req, res) => {
     const { id } = req.params
     const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
     const product = await Product.findByIdAndUpdate(id, { name, price, description, images, discount, discountedPrice, categories, tags, stock }, { runValidators: true, new: true })
-    console.log(product)
+    req.flash("success", "Successfully updated product!")
     res.redirect("/manageproducts/all")
 }))
 
 router.delete("/:id", catchAsync(async (req, res) => {
     const { id } = req.params
     const product = await Product.findByIdAndDelete(id)
+    req.flash("success", "Successfully deleted product!")
     res.redirect("/manageproducts/all")
 }))
 

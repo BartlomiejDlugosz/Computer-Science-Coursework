@@ -31,6 +31,7 @@ router.put("/updatestatus/:id", catchAsync(async (req, res) => {
     const order = await Order.findById(id)
     order.status = status
     await order.save()
+    req.flash("success", "Successfully updated order!")
     res.redirect(`/manageorders/${id}`)
 }))
 
