@@ -33,7 +33,7 @@ module.exports.isLoggedIn = (req, res, next) => {
 
 module.exports.isStaff = (req, res, next) => {
     if (req.user.permLvl >= 2) {
-        next()
+        return next()
     }
     req.flash("error", "You are not authorized to do that!")
     res.redirect("/")

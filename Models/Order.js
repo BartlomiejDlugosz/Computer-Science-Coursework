@@ -24,8 +24,33 @@ const orderSchema = new mongoose.Schema({
         type: Number,
         min: 0
     },
-    address: {
+    name: {
         type: String,
+        required: true
+    },
+    address: {
+        type: {
+            city: {
+                type: String,
+                required: true
+            },
+            country: {
+                type: String,
+                required: true
+            },
+            line1: {
+                type: String,
+                required: true
+            },
+            line_2: {
+                type: String
+            },
+            postal_code: {
+                type: String,
+                required: true,
+                maxlength: 8
+            }
+        },
         required: true
     },
     transactionId: {
@@ -35,7 +60,8 @@ const orderSchema = new mongoose.Schema({
     status: {
         type: Number,
         min: 1,
-        max: 3
+        max: 2,
+        default: 1
     }
 })
 
