@@ -17,7 +17,9 @@
                     <%= order.date.toLocaleString("en-UK") %>
                 </h5>
                 <p class="card-text">
-                    <%= order.address %>
+                    <%= order.address.line1 %> <br>
+                    <%= order.address.city %> <br>
+                    <%= order.address.postal_code %>
                 </p>
                 <a href="/manageorders/<%= order.id %>" class="btn btn-primary">Manage</a>
             </div>

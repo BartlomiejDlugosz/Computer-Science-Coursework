@@ -4,16 +4,26 @@ const router = express.Router()
 const Product = require("../Models/Product")
 const { catchAsync, ExpressError } = require("../utils/errorhandling")
 
+router.get("/", catchAsync(async (req, res) => {
+    let newArray = []
+    const cart = req.user ? req.user.cart : req.session.cart
+    for (let product of cart) {
+        let found = await Product.findById(product.productId)
+        newArray.push({ product: found, qty: product.qty })
+    }
+    res.render("cart", { cart: newArray })
+}))
+
 router.get("/add/:id", catchAsync(async (req, res) => {
     const { id } = req.params
     const { redirect = "/" } = req.query
-    const cart = req.session.cart
+    const cart = req.user ? req.user.cart : req.session.cart
     const product = await Product.findById(id)
     if (product) {
         if (product.stock > 0) {
             let found = false
             for (let item of cart) {
-                if (item.id === product.id) {
+                if (item.productId === product.id) {
                     if (item.qty >= product.stock) {
                         req.flash("error", "You have too many of this product in your cart!")
                         return res.redirect(redirect)
@@ -24,10 +34,12 @@ router.get("/add/:id", catchAsync(async (req, res) => {
                 }
             }
             if (!found) {
-                cart.push({ id: product.id, qty: 1 })
+                cart.push({ productId: product.id, qty: 1 })
             }
             req.session.cart = cart
-            console.log(req.session.cart)
+            if (req.user) {
+                await req.user.save()
+            }
             req.flash("success", "Successfully added to cart!")
             return res.redirect(redirect)
         }
@@ -43,9 +55,9 @@ router.get("/qty/:op/:id", catchAsync(async (req, res) => {
     const { op, id } = req.params
     const { redirect = "/" } = req.query
     const product = await Product.findById(id)
-    const cart = req.session.cart
+    const cart = req.user ? req.user.cart : req.session.cart
     for (let i = 0; i < cart.length; i++) {
-        if (cart[i].id === id) {
+        if (cart[i].productId === id) {
             cart[i].qty = op === "add" ? cart[i].qty + 1 : cart[i].qty - 1
             if (cart[i].qty > product.stock) {
                 cart[i].qty = product.stock
@@ -57,18 +69,24 @@ router.get("/qty/:op/:id", catchAsync(async (req, res) => {
             break
         }
     }
+    if (req.user) {
+        await req.user.save()
+    }
     res.redirect(redirect)
 }))
 
 router.get("/remove/:id", catchAsync(async (req, res) => {
     const { id } = req.params
     const { redirect = "/" } = req.query
-    const cart = req.session.cart
+    const cart = req.user ? req.user.cart : req.session.cart
     for (let i = 0; i < cart.length; i++) {
-        if (cart[i].id === id) {
+        if (cart[i].productId === id) {
             cart.splice(i, 1)
             break
         }
+    }
+    if (req.user) {
+        await req.user.save()
     }
     res.redirect(redirect)
 }))

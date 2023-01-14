@@ -51,7 +51,7 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
 app.use(express.urlencoded({ extended: true }))
-app.use(express.json())
+app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
 app.use(methodOverride("_method"))
 app.use(cookieParser())
 app.use(session(sessionOptions))
@@ -73,7 +73,6 @@ app.use(catchAsync(async (req, res, next) => {
 app.get("/", catchAsync(async (req, res) => {
     const categories = await Category.find({})
     const products = await Product.find({})
-    console.log(req.user)
     res.render("homePage", { products, categories })
 }))
 
@@ -90,16 +89,6 @@ app.post("/getProductInfo", catchAsync(async (req, res) => {
         newArray.push({ product: found, qty: product.qty })
     }
     res.send(newArray)
-}))
-
-
-app.get("/cart", catchAsync(async (req, res) => {
-    let newArray = []
-    for (let product of req.session.cart) {
-        let found = await Product.findById(product.id)
-        newArray.push({ product: found, qty: product.qty })
-    }
-    res.render("cart", { cart: newArray })
 }))
 
 app.post("/createOrder", catchAsync(async (req, res) => {
