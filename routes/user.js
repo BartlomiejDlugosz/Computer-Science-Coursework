@@ -9,6 +9,19 @@ const { catchAsync, ExpressError } = require("../utils/errorhandling")
 const { validateUser, isLoggedIn } = require("../utils/middleware")
 const Product = require("../Models/Product")
 const Order = require("../Models/Order")
+const nodemailer = require("nodemailer")
+const ejs = require("ejs")
+const path = require("path")
+
+const transporter = nodemailer.createTransport({
+    port: 465,
+    host: "smtp.gmail.com",
+    auth: {
+        user: "bartlomiejd15@gmail.com",
+        pass: "amgcjxphwcylbkoq"
+    },
+    secure: true
+})
 
 const endpointSecret = 'whsec_94e7ebad80bd2cfa831390bc3f4be03bd3c4a95b94c71b894b3a1a2b6f128554';
 
@@ -76,7 +89,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
         line_items,
         customer_email: req.user.email,
         mode: 'payment',
-        success_url: `http://localhost:3000/`,
+        success_url: `http://localhost:3000/order/success?session_id={CHECKOUT_SESSION_ID}`,
         cancel_url: `http://localhost:3000/error`,
         shipping_address_collection: {
             allowed_countries: ["GB"]
@@ -107,7 +120,7 @@ router.post("/7586b8ed0b1299b2ee9e1170d6ee35ad160b8b9cfeb9fb8f960fa135b5cf65163f
                 expand: ["data.price.product"]
             })
             const customerId = event.data.object.metadata.userId
-
+            const customer = await User.findById(customerId)
             const productIds = []
             for (let obj of lineItemsSession.data) {
                 let productId = obj.price.product.metadata.id
@@ -125,6 +138,27 @@ router.post("/7586b8ed0b1299b2ee9e1170d6ee35ad160b8b9cfeb9fb8f960fa135b5cf65163f
 
             const newOrder = new Order({ userId: customerId, productIds, date, total, name, address, transactionId })
             await newOrder.save()
+
+            const populatedOrder1 = await Order.populate(newOrder, { path: "userId" })
+            const populatedOrder = await Order.populate(populatedOrder1, { path: "productIds", populate: { path: "id" } })
+            console.log(populatedOrder)
+            ejs.renderFile(path.join(__dirname, "../views/email.ejs"), { order: populatedOrder }, (err, data) => {
+                if (err) console.log(err)
+                else {
+                    const mailData = {
+                        from: "bartlomiejd15@gmail.com",
+                        to: customer.email,
+                        subject: "Order confirmation",
+                        html: data
+                    }
+                    transporter.sendMail(mailData, (err, info) => {
+                        if (err) console.log(err)
+                        else console.log(info)
+                    })
+                }
+            })
+
+
         }
     } catch (e) {
         console.log(e)
