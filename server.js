@@ -68,7 +68,6 @@ app.use(catchAsync(async (req, res, next) => {
     res.locals.url = req.originalUrl
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
-    console.log(req.body)
     next()
 }))
 
