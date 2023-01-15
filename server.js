@@ -56,11 +56,11 @@ app.use(/\/((?!orderupdate).)*/, express.json())
 app.use(/\/((?!orderupdate).)*/, express.urlencoded({ extended: true }))
 app.use(/\/((?!orderupdate).)*/, methodOverride("_method"))
 app.use(/\/((?!orderupdate).)*/, cookieParser())
-app.use(session(sessionOptions))
-app.use(flash())
-app.use(express.static(path.join(__dirname, "public")))
+app.use(/\/((?!orderupdate).)*/, session(sessionOptions))
+app.use(/\/((?!orderupdate).)*/, flash())
+app.use(/\/((?!orderupdate).)*/, express.static(path.join(__dirname, "public")))
 
-app.use(catchAsync(async (req, res, next) => {
+app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
     req.session.cart = req.session.cart || []
     const user = await User.findById(req.session.userId) || null
     req.user = user

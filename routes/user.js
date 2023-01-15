@@ -85,7 +85,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
 }))
 
 router.post("/orderupdate", catchAsync(async (req, res) => {
-    const payload = req.rawBody
+    const payload = req.body
     const sig = req.headers['stripe-signature']
     let event
 
