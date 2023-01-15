@@ -10,11 +10,11 @@
                 <p class="card-text description"><%= item.product.description %> </p>
                 <div class="row text-center mb-2 gx-0">
                     <div class="col-sm-2"><a href="/cart/qty/remove/<%= item.product.id %>?redirect=<%= url %>"
-                            class="btn btn-outline-primary change-quantity py-auto w-100 <%= item.qty === 1 ? 'disabled' : '' %>">-</a>
+                            class="btn btn-outline-primary change-quantity py-auto w-100 <%= item.qty <= 1 ? 'disabled' : '' %>">-</a>
                     </div>
                     <p class="qty col-sm-8 my-auto">Quantity: <%= item.qty %></p>
                     <div class="col-sm-2"><a href="/cart/qty/add/<%= item.product.id %>?redirect=<%= url %>"
-                            class="btn btn-outline-primary change-quantity py-auto w-100 <%= item.product.stock === item.qty ? 'disabled' : '' %>">+</a>
+                            class="btn btn-outline-primary change-quantity py-auto w-100 <%= item.product.stock <= item.qty ? 'disabled' : '' %>">+</a>
                     </div>
                 </div>
                 <a href="/cart/remove/<%= item.product.id %>?redirect=<%= url %>"
