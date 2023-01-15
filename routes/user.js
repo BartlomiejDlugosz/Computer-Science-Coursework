@@ -20,12 +20,15 @@ router.get("/register", (req, res) => {
 })
 
 router.post("/login", catchAsync(async (req, res) => {
-    console.log("login")
     const { user: u } = req.body
     const user = await User.findOne({ email: u.email })
     if (user) {
         if (await bcrypt.compare(u.password, user.password)) {
             req.session.userId = user.id
+            if (req.session.cart.length > 0) {
+                user.cart = req.session.cart
+                await user.save()
+            }
             req.flash("success", "Successfully logged in!")
             return res.redirect(req.session.previousUrl || "/")
         }
