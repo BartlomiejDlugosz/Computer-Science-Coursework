@@ -68,23 +68,45 @@ router.get("/logout", (req, res) => {
 router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     const line_items = []
     const cart = req.user ? req.user.cart : req.session.cart
-    for (let product of cart) {
+    let error = false
+    for (let i = 0; i < cart.length; i++) {
+        let product = cart[i]
         const found = await Product.findById(product.productId.toString())
         if (found) {
-            line_items.push({
-                price_data: {
-                    currency: "gbp",
-                    product_data: {
-                        name: found.name,
-                        description: found.description,
-                        metadata: { id: found.id }
+            if (found.stock >= product.qty) {
+                line_items.push({
+                    price_data: {
+                        currency: "gbp",
+                        product_data: {
+                            name: found.name,
+                            description: found.description,
+                            metadata: { id: found.id }
+                        },
+                        unit_amount: Math.round(found.discount ? found.discountedPrice * 100 : found.price * 100)
                     },
-                    unit_amount: Math.round(found.discount ? found.discountedPrice * 100 : found.price * 100)
-                },
-                quantity: product.qty
-            })
+                    quantity: product.qty
+                })
+            } else {
+                if (found.stock === 0) {
+                    cart.splice(i, 1)
+                } else {
+                    cart[i].qty = found.stock
+                }
+                error = true
+            }
         }
     }
+
+    if (error) {
+        req.session.cart = cart
+        if (req.user) {
+            req.user.cart = cart
+            await req.user.save()
+        }
+        req.flash("error", "One or more items in your cart are out of stock and have been removed for you")
+        return res.redirect("/cart")
+    }
+
     const fullUrl = req.protocol + '://' + req.get('host')
     const session = await stripe.checkout.sessions.create({
         line_items,
