@@ -21,6 +21,7 @@ const manageProductsRoute = require("./routes/manageProducts")
 const manageOrdersRoute = require("./routes/manageOrders")
 const cartRoutes = require("./routes/cart")
 const userRoutes = require("./routes/user")
+const orderRoutes = require("./routes/order")
 
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
 
@@ -135,6 +136,7 @@ app.use("/categories", categoryRoutes)
 app.use("/manageProducts", manageProductsRoute)
 app.use("/manageOrders", manageOrdersRoute)
 app.use("/cart", cartRoutes)
+app.use("/order", orderRoutes)
 app.use("/", userRoutes)
 
 app.all("*", (req, res, next) => {

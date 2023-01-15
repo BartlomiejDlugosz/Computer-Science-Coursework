@@ -21,6 +21,7 @@
     "joi": "^17.7.0",
     "method-override": "^3.0.0",
     "mongoose": "^6.7.1",
+    "nodemailer": "^6.9.0",
     "stripe": "^11.6.0"
   }
 }
