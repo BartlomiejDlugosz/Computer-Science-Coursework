@@ -19,7 +19,13 @@
       </ul>
       <div class="navbar-nav">
         <div class="nav-item">
-          <a class="nav-link <%= url === "/cart" ? "active" : "" %>" href="/cart">Cart</a>
+          <a class="nav-link position-relative <%= url === "/cart" ? "active" : "" %>" href="/cart">Cart
+            [<%= cartLength %>]
+            <!-- <span
+              class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"><%= cartLength %><span
+                class="visually-hidden">unread messages</span>
+            </span> -->
+          </a>
         </div>
         <% if (user) { %>
         <div class="nav-item">

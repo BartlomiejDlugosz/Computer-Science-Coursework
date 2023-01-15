@@ -22,14 +22,15 @@
         <p>Your order will be dispatched soon, when it's ready we will notify you via: <a
                 href="mailto:<%= order.userId.email %>"><%= order.userId.email %></a></p>
 
-        <p>Items: <br>
+        <p>
+            Items: <br>
             <% for(let product of order.productIds) { %>
             <b><%= product.qty %> <%= product.id.name %></b> <br>
             <% } %>
         </p>
 
         <p>
-            Shipping address:<br><br>
+            Shipping address:<br>
             <%= order.address.line1 %> <br>
             <% if (order.address.line2) { %>
             <%= order.address.line2 %> <br>

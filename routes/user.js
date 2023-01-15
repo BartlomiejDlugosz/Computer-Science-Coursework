@@ -140,9 +140,11 @@ router.post("/7586b8ed0b1299b2ee9e1170d6ee35ad160b8b9cfeb9fb8f960fa135b5cf65163f
             const newOrder = new Order({ userId: customerId, productIds, date, total, name, address, transactionId })
             await newOrder.save()
 
-            const populatedOrder1 = await Order.populate(newOrder, { path: "userId" })
-            const populatedOrder = await Order.populate(populatedOrder1, { path: "productIds", populate: { path: "id" } })
-            console.log(populatedOrder)
+            customer.cart = []
+            customer.save()
+
+            const populatedOrder = await Order.populate(newOrder, { path: "userId" }).populate(populatedOrder1, { path: "productIds", populate: { path: "id" } })
+
             ejs.renderFile(path.join(__dirname, "../views/email.ejs"), { order: populatedOrder }, (err, data) => {
                 if (err) console.log(err)
                 else {
