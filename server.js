@@ -6,6 +6,7 @@ const ejsMate = require("ejs-mate")
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
 const flash = require("connect-flash")
+const bodyParser = require("body-parser")
 
 const app = express()
 
@@ -50,10 +51,11 @@ app.engine("ejs", ejsMate)
 app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
-app.use(express.urlencoded({ extended: true }))
-app.use(express.json({ verify: (req, res, buf) => { req.rawBody = buf } }));
-app.use(methodOverride("_method"))
-app.use(cookieParser())
+app.use("/orderupdate", express.raw({ type: "application/json" }))
+app.use(/\/((?!orderupdate).)*/, express.json())
+app.use(/\/((?!orderupdate).)*/, express.urlencoded({ extended: true }))
+app.use(/\/((?!orderupdate).)*/, methodOverride("_method"))
+app.use(/\/((?!orderupdate).)*/, cookieParser())
 app.use(session(sessionOptions))
 app.use(flash())
 app.use(express.static(path.join(__dirname, "public")))
@@ -66,6 +68,7 @@ app.use(catchAsync(async (req, res, next) => {
     res.locals.url = req.originalUrl
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
+    console.log(req.body)
     next()
 }))
 

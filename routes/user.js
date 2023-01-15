@@ -4,7 +4,6 @@ const router = express.Router()
 const stripe = require('stripe')('sk_test_51Klf4uDwkLbs7UhvgbC57fRb7nIeEBOALxPj2tVqkflB1eh3g9fekCGvOloPBBepqtwmOx7tfOjLpzow0KIin0ck00ePvuSr3S')
 
 const bcrypt = require("bcrypt")
-const bodyParser = require("body-parser")
 const User = require("../Models/User")
 const { catchAsync, ExpressError } = require("../utils/errorhandling")
 const { validateUser, isLoggedIn } = require("../utils/middleware")
@@ -21,6 +20,7 @@ router.get("/register", (req, res) => {
 })
 
 router.post("/login", catchAsync(async (req, res) => {
+    console.log("login")
     const { user: u } = req.body
     const user = await User.findOne({ email: u.email })
     if (user) {
@@ -84,8 +84,8 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     res.redirect(303, session.url)
 }))
 
-router.post("/orderupdate", bodyParser.raw({ type: "application/json" }), catchAsync(async (req, res) => {
-    const payload = req.rawBody
+router.post("/orderupdate", catchAsync(async (req, res) => {
+    const payload = req.body
     const sig = req.headers['stripe-signature']
     let event
 
@@ -98,6 +98,7 @@ router.post("/orderupdate", bodyParser.raw({ type: "application/json" }), catchA
 
     try {
         if (event.type === "checkout.session.completed") {
+            console.log("RECEIVED ORDER")
             const lineItemsSession = await stripe.checkout.sessions.listLineItems(event.data.object.id, {
                 expand: ["data.price.product"]
             })
