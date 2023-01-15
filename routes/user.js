@@ -156,7 +156,6 @@ router.post("/7586b8ed0b1299b2ee9e1170d6ee35ad160b8b9cfeb9fb8f960fa135b5cf65163f
                     }
                     transporter.sendMail(mailData, (err, info) => {
                         if (err) console.log(err)
-                        else console.log(info)
                     })
                 }
             })
