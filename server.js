@@ -6,7 +6,7 @@ const ejsMate = require("ejs-mate")
 const cookieParser = require("cookie-parser")
 const session = require("express-session")
 const flash = require("connect-flash")
-const bodyParser = require("body-parser")
+const MongoStore = require("connect-mongo")
 
 const app = express()
 
@@ -25,7 +25,10 @@ const orderRoutes = require("./routes/order")
 
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
 
-mongoose.connect("MONGO_DB_LINK_REDACTED")
+
+const dbUrl = "MONGO_DB_LINK_REDACTED"
+
+mongoose.connect(dbUrl)
     .then(data => {
         console.log("Connected to mongo")
     })
@@ -35,17 +38,29 @@ mongoose.connect("MONGO_DB_LINK_REDACTED")
     })
 
 const PORT = process.env.PORT || 3000
+const secret = process.env.SECRET || "secret"
+if (secret === "secret") console.log("NOT USING SECURE SECRET")
 
 const sessionOptions = {
-    secret: "secret",
+    secret: secret,
     resave: false,
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
-    }
+    },
+    store: MongoStore.create({
+        mongoUrl: dbUrl,
+        secret: secret,
+        touchAfter: 24 * 60 * 60
+    })
 }
+
+sessionOptions.store.on("error", function (e) {
+    console.log("SESSION STORE ERROR")
+    console.log(e)
+})
 
 app.engine("ejs", ejsMate)
 
