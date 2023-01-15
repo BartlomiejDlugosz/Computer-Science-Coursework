@@ -85,12 +85,13 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
             })
         }
     }
+    const fullUrl = req.protocol + '://' + req.get('host')
     const session = await stripe.checkout.sessions.create({
         line_items,
         customer_email: req.user.email,
         mode: 'payment',
-        success_url: `http://localhost:3000/order/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `http://localhost:3000/error`,
+        success_url: `${fullUrl}/order/success?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${fullUrl}/error`,
         shipping_address_collection: {
             allowed_countries: ["GB"]
         },
