@@ -84,6 +84,9 @@ app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
     res.locals.url = req.originalUrl
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
+    const cart = user ? user.cart : req.session.cart
+    const cartLength = cart.reduce((prev, current) => prev + current.qty, 0)
+    res.locals.cartLength = cartLength
     next()
 }))
 
