@@ -87,18 +87,18 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     res.redirect(303, session.url)
 }))
 
-router.post("/orderupdate", catchAsync(async (req, res) => {
+router.post("/7586b8ed0b1299b2ee9e1170d6ee35ad160b8b9cfeb9fb8f960fa135b5cf65163fbee0c14f5be2fe541c2ac57150851d", express.json(), catchAsync(async (req, res) => {
     const payload = req.body
-    const sig = req.headers['stripe-signature']
-    let event
+    // const sig = req.headers['stripe-signature']
+    const event = payload
 
-    try {
-        event = stripe.webhooks.constructEvent(payload, sig, endpointSecret)
-    } catch (e) {
-        console.log(payload)
-        console.log(e)
-        throw new ExpressError("Webhook error!")
-    }
+    // try {
+    //     event = stripe.webhooks.constructEvent(payload, sig, endpointSecret)
+    // } catch (e) {
+    //     console.log(payload)
+    //     console.log(e)
+    //     throw new ExpressError("Webhook error!")
+    // }
 
     try {
         if (event.type === "checkout.session.completed") {
