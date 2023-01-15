@@ -92,6 +92,7 @@ router.post("/orderupdate", catchAsync(async (req, res) => {
     try {
         event = stripe.webhooks.constructEvent(payload, sig, endpointSecret)
     } catch (e) {
+        console.log(payload)
         console.log(e)
         throw new ExpressError("Webhook error!")
     }
