@@ -88,10 +88,8 @@ router.get("/remove/:id", catchAsync(async (req, res) => {
         }
     }
     if (req.user) {
-        console.log(cart)
         req.user.cart = cart
         await req.user.save()
-        console.log(req.user)
     }
     res.redirect(redirect)
 }))
