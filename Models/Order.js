@@ -13,7 +13,8 @@ const orderSchema = new mongoose.Schema({
                 ref: "Product",
                 _id: false
             },
-            qty: Number
+            qty: Number,
+            _id: false
         }],
         required: true
     },
@@ -64,6 +65,9 @@ const orderSchema = new mongoose.Schema({
         min: 1,
         max: 2,
         default: 1
+    },
+    trackingNumber: {
+        type: String
     }
 })
 
