@@ -107,53 +107,6 @@ app.get("/menu", isLoggedIn, (req, res) => {
 })
 
 
-app.post("/getProductInfo", catchAsync(async (req, res) => {
-    const products = req.body
-    let newArray = []
-    for (let product of products) {
-        let found = await Product.findById(product.id)
-        newArray.push({ product: found, qty: product.qty })
-    }
-    res.send(newArray)
-}))
-
-app.post("/createOrder", catchAsync(async (req, res) => {
-    const cart = req.body
-    let valid = { type: true, product: null }
-    let total = 0
-    for (let productId of cart) {
-        let product = await Product.findById(productId.id)
-        if (product.stock >= productId.qty) {
-            if (product.discount) {
-                total += product.discountedPrice * productId.qty
-            } else {
-                total += product.price * productId.qty
-            }
-        } else {
-            valid.type = false
-            valid.product = product
-        }
-    }
-    if (valid.type) {
-        const user = await User.findById("63721fca71717f4e4166b46e")
-        const newOrder = new Order({ userId: user.id, productIds: cart, date: Date.now(), total, address: user.address, transactionId: "0", status: 1 })
-        await newOrder.save()
-        user.orders.push(newOrder)
-        await user.save()
-
-        for (let productId of cart) {
-            let product = await Product.findById(productId.id)
-            product.stock -= productId.qty
-            product.save()
-        }
-
-        res.send({ status: "Success" })
-    } else {
-        res.send({ status: "Out of stock", errorMessage: `The product "${valid.product.name}" is out of stock, and has been removed from the cart for you.`, product: valid.product })
-    }
-}))
-
-
 app.use("/products", productRoutes)
 app.use("/categories", categoryRoutes)
 app.use("/manageProducts", manageProductsRoute)
@@ -162,6 +115,7 @@ app.use("/cart", cartRoutes)
 app.use("/order", orderRoutes)
 app.use("/user", userRoutes)
 app.use("/", authRoutes)
+
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404))
