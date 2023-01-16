@@ -37,6 +37,7 @@
     <div class="row">
         <p class="col-sm-2">Address:</p>
         <p class="col-sm-10">
+            <%= order.name %> <br>
             <%= order.address.line1 %> <br>
             <% if (order.address.line2) { %>
             <%= order.address.line2 %> <br>
