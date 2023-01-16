@@ -87,4 +87,12 @@
             <%= order.status === 1 ? "Not started" : "Dispatched" %>
         </p>
     </div>
+    <% if (order.status === 2) { %>
+    <div class="row">
+        <p class="col-sm-2">Tracking number:</p>
+        <p class="col-sm-10">
+            Not yet available
+        </p>
+    </div>
+    <% } %>
 </div>
