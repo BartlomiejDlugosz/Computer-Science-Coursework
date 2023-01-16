@@ -20,10 +20,12 @@ const categoryRoutes = require("./routes/categories")
 const manageProductsRoute = require("./routes/manageProducts")
 const manageOrdersRoute = require("./routes/manageOrders")
 const cartRoutes = require("./routes/cart")
-const userRoutes = require("./routes/user")
+const authRoutes = require("./routes/auth")
 const orderRoutes = require("./routes/order")
+const userRoutes = require("./routes/user")
 
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
+const { isLoggedIn } = require("./utils/middleware")
 
 
 const dbUrl = "mongodb+srv://shopApp:Fy6OpjfLwaaEV79D@bookings.owfjo.mongodb.net/ShopApp"
@@ -97,7 +99,7 @@ app.get("/", catchAsync(async (req, res) => {
     res.render("homePage", { products, categories })
 }))
 
-app.get("/menu", (req, res) => {
+app.get("/menu", isLoggedIn, (req, res) => {
     res.render("menu")
 })
 
@@ -155,7 +157,8 @@ app.use("/manageProducts", manageProductsRoute)
 app.use("/manageOrders", manageOrdersRoute)
 app.use("/cart", cartRoutes)
 app.use("/order", orderRoutes)
-app.use("/", userRoutes)
+app.use("/user", userRoutes)
+app.use("/", authRoutes)
 
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404))
