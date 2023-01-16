@@ -55,8 +55,12 @@ router.post("/register", validateUser, catchAsync(async (req, res) => {
     const user = new User(u)
     await user.save()
     req.session.userId = user.id
+    if (req.session.cart.length > 0) {
+        user.cart = req.session.cart
+        await user.save()
+    }
     req.flash("success", "Successfully created account!")
-    res.redirect(res.redirect(req.session.previousUrl || "/"))
+    res.redirect(req.session.previousUrl || "/")
 }))
 
 router.get("/logout", (req, res) => {
