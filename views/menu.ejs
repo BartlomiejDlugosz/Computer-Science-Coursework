@@ -1,4 +1,8 @@
 <% layout("layouts/boilerplate") %>
 <h1>Full menu coming soon!</h1>
+<a href="/user/orders" class="btn btn-primary">View orders</a>
+<br><br>
+<% if (user.permLvl >= 2) { %>
 <a href="/manageproducts/all" class="btn btn-primary">Manage Products</a>
 <a href="/manageorders/all" class="btn btn-primary">Manage Orders</a>
+<% } %>
