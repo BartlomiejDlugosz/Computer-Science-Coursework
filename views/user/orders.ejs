@@ -1,5 +1,11 @@
 <% layout("layouts/boilerplate") %>
+<div class="d-flex justify-content-between">
+    <a href="/menu" class="btn btn-danger mb-5">Return to Menu</a>
+</div>
 <div class="row">
+    <% if (user.orders.length === 0) { %>
+    <p class="lead">You don't have any orders to view</p>
+    <% } %>
     <% for (let order of user.orders) { %>
     <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
         <div class="card h-100">
