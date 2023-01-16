@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
     secure: true
 })
 
-const endpointSecret = 'whsec_7AhBfy2zCgRW2dYYBLl3YTC9RjUPDi09';
+const endpointSecret = process.env.SIGNING_SECRET || 'whsec_7AhBfy2zCgRW2dYYBLl3YTC9RjUPDi09';
 
 router.get("/login", (req, res) => {
     res.render("user/login")
@@ -123,7 +123,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     res.redirect(303, session.url)
 }))
 
-router.post("/7586b8ed0b1299b2ee9e1170d6ee35ad160b8b9cfeb9fb8f960fa135b5cf65163fbee0c14f5be2fe541c2ac57150851d", express.json(), catchAsync(async (req, res) => {
+router.post("/orderupdate", express.json(), catchAsync(async (req, res) => {
     const payload = req.body
     const sig = req.headers['stripe-signature']
     let event
