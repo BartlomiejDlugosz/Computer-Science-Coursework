@@ -36,7 +36,8 @@ const userSchema = new mongoose.Schema({
             },
             qty: {
                 type: Number
-            }
+            },
+            _id: false
         }],
         ref: "Product"
     },

@@ -10,7 +10,8 @@ const orderSchema = new mongoose.Schema({
         type: [{
             id: {
                 type: mongoose.Schema.Types.ObjectId,
-                ref: "Product"
+                ref: "Product",
+                _id: false
             },
             qty: Number
         }],
@@ -49,7 +50,8 @@ const orderSchema = new mongoose.Schema({
                 type: String,
                 required: true,
                 maxlength: 8
-            }
+            },
+            _id: false
         },
         required: true
     },
