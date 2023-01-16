@@ -1,0 +1,90 @@
+<% layout("layouts/boilerplate") %>
+<div class="d-flex justify-content-between">
+    <a href="/user/orders" class="btn btn-danger mb-5">Return to Orders</a>
+</div>
+<h2 class="display-5">Order #<%= order.id %>
+</h2>
+<div class="user-info">
+    <h3>Customer Info</h3>
+    <div class="row">
+        <p class="col-sm-2">Name:</p>
+        <p class="col-sm-10">
+            <%= order.userId.name %>
+        </p>
+    </div>
+    <div class="row">
+        <p class="col-sm-2">Email:</p>
+        <p class="col-sm-10">
+            <%= order.userId.email %>
+        </p>
+    </div>
+    <div class="row">
+        <p class="col-sm-2">Phone:</p>
+        <p class="col-sm-10">
+            <%= order.userId.phone ? order.userId.phone : "-" %>
+        </p>
+    </div>
+
+</div>
+<div class="order-info pb-5">
+    <h3>Order Info</h3>
+    <div class="row">
+        <p class="col-sm-2">Date:</p>
+        <p class="col-sm-10">
+            <%= order.date.toLocaleString("en-UK") %>
+        </p>
+    </div>
+    <div class="row">
+        <p class="col-sm-2">Address:</p>
+        <p class="col-sm-10">
+            <%= order.address.line1 %> <br>
+            <% if (order.address.line2) { %>
+            <%= order.address.line2 %> <br>
+            <% } %>
+            <%= order.address.city %> <br>
+            <%= order.address.postal_code %> <br>
+            <%= order.address.country %>
+        </p>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">
+            <p>Products:</p>
+        </div>
+        <div class="col-sm-10">
+            <div class="row">
+                <% for (let product of order.productIds) { %>
+                <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
+                    <div class="card h-100">
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">
+                                <%= product.id.name %>
+                            </h5>
+                            <h6><b>£<%= product.id.price %></b>
+                            </h6>
+                            <p class="card-text">
+                                <%= product.id.description %>
+                            </p>
+                            <p>Qty: <b>
+                                    <%= product.qty %>
+                                </b>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <% } %>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <p class="col-sm-2">Total:</p>
+        <p class="col-sm-10">
+            <%= order.total %>
+        </p>
+    </div>
+    <div class="row">
+        <p class="col-sm-2">Status:</p>
+        <p class="col-sm-10">
+            <%= order.status === 1 ? "Not started" : "Dispatched" %>
+        </p>
+    </div>
+</div>
