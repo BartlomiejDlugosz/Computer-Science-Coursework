@@ -1,0 +1,23 @@
+<% layout("layouts/boilerplate") %>
+
+
+<div class="alert alert-warning" role="alert">
+    <h1 class="alert-heading">Warning!</h1>
+    <p>Deleting your account is irreversible and all data (including orders) will be deleted. If you have any pending
+        orders then you won't
+        be able to delete your account until they have been fulfilled. Please enter your password to continue</p>
+</div>
+
+<form action="/user/deleteaccount" method="POST" class="mb-5 needs-validation" novalidate>
+    <div class="form-group row mb-3">
+        <label for="password" class="col-form-label col-sm-2">Password*:</label>
+        <div class="col-sm-10">
+            <input type="password" name="password" id="password" class="form-control" placeholder="Password" required>
+            <div class="invalid-feedback">
+                Please enter a valid password
+            </div>
+        </div>
+    </div>
+
+    <button class="btn btn-danger form-control">Delete</button>
+</form>
