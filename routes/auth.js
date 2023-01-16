@@ -1,7 +1,7 @@
 const express = require("express")
 const router = express.Router()
 
-const stripe = require('stripe')('sk_test_51Klf4uDwkLbs7UhvgbC57fRb7nIeEBOALxPj2tVqkflB1eh3g9fekCGvOloPBBepqtwmOx7tfOjLpzow0KIin0ck00ePvuSr3S')
+const stripe = require('stripe')(process.env.STRIPE_KEY)
 
 const bcrypt = require("bcrypt")
 const User = require("../Models/User")

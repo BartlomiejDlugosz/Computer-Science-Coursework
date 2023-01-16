@@ -19,7 +19,8 @@
         <p>Thank you for shopping with us</p>
         <h4>Details</h4>
         <p>Transaction Id: <%= order.transactionId %> </p>
-        <a href="/order/<%= order.id %>">Order #<%= order.id %></a>
+        <a href="https://computer-science-coursework-rpi5qn6yfa-ew.a.run.app/order/<%= order.id %>">Order
+            #<%= order.id %></a>
         <p>Your order will be dispatched soon, when it's ready we will notify you via: <a
                 href="mailto:<%= order.userId.email %>"><%= order.userId.email %></a></p>
 
