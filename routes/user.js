@@ -23,7 +23,7 @@ const transporter = nodemailer.createTransport({
     secure: true
 })
 
-const endpointSecret = 'whsec_94e7ebad80bd2cfa831390bc3f4be03bd3c4a95b94c71b894b3a1a2b6f128554';
+const endpointSecret = 'whsec_7AhBfy2zCgRW2dYYBLl3YTC9RjUPDi09';
 
 router.get("/login", (req, res) => {
     res.render("user/login")
@@ -125,16 +125,16 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
 
 router.post("/7586b8ed0b1299b2ee9e1170d6ee35ad160b8b9cfeb9fb8f960fa135b5cf65163fbee0c14f5be2fe541c2ac57150851d", express.json(), catchAsync(async (req, res) => {
     const payload = req.body
-    // const sig = req.headers['stripe-signature']
-    const event = payload
+    const sig = req.headers['stripe-signature']
+    let event
 
-    // try {
-    //     event = stripe.webhooks.constructEvent(payload, sig, endpointSecret)
-    // } catch (e) {
-    //     console.log(payload)
-    //     console.log(e)
-    //     throw new ExpressError("Webhook error!")
-    // }
+    try {
+        event = stripe.webhooks.constructEvent(payload, sig, endpointSecret)
+    } catch (e) {
+        console.log(payload)
+        console.log(e)
+        throw new ExpressError("Webhook error!")
+    }
 
     try {
         if (event.type === "checkout.session.completed") {
