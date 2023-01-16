@@ -1,5 +1,6 @@
 const mongoose = require("mongoose")
 const bcrypt = require("bcrypt")
+const Order = require("./Order")
 
 const userSchema = new mongoose.Schema({
     permLvl: {
@@ -53,9 +54,15 @@ userSchema.pre("save", async function (next) {
     next()
 })
 
-userSchema.post('save', function (error, doc, next) {
-    if (error.name === 'MongoServerError' && error.code === 11000 && error.keyValue.email) {
-        next(new Error('Email address was already taken, please choose a different one.'));
+userSchema.post("remove", async function (doc) {
+    if (doc) {
+        await Order.deleteMany({ _id: { $in: doc.orders } })
+    }
+})
+
+userSchema.post("save", function (error, doc, next) {
+    if (error.name === "MongoServerError" && error.code === 11000 && error.keyValue.email) {
+        next(new Error("Email address was already taken, please choose a different one."));
     } else {
         next(error);
     }
