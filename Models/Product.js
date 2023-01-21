@@ -1,5 +1,7 @@
+// Library imports
 const mongoose = require("mongoose")
 
+// Defines the schema for the product model
 const productSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -34,4 +36,5 @@ const productSchema = new mongoose.Schema({
     }
 })
 
+// Exports the product model
 module.exports = mongoose.model("Product", productSchema)
