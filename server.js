@@ -1,3 +1,4 @@
+// Library Imports
 const express = require("express")
 const mongoose = require("mongoose")
 const path = require("path")
@@ -10,11 +11,12 @@ const MongoStore = require("connect-mongo")
 
 const app = express()
 
+// Model imports
 const User = require("./Models/User")
-const Order = require("./Models/Order")
 const Product = require("./Models/Product")
 const Category = require("./Models/Category")
 
+// Route imports
 const productRoutes = require("./routes/products")
 const categoryRoutes = require("./routes/categories")
 const manageProductsRoute = require("./routes/manageProducts")
@@ -25,11 +27,11 @@ const orderRoutes = require("./routes/order")
 const userRoutes = require("./routes/user")
 
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
-const { isLoggedIn } = require("./utils/middleware")
 
 
 const dbUrl = "mongodb+srv://shopApp:Fy6OpjfLwaaEV79D@bookings.owfjo.mongodb.net/ShopApp"
 
+// Connects to the mongo database
 mongoose.connect(dbUrl)
     .then(data => {
         console.log("Connected to mongo")
@@ -43,6 +45,7 @@ const PORT = process.env.PORT || 3000
 const secret = process.env.SECRET || "secret"
 if (secret === "secret") console.log("NOT USING SECURE SECRET")
 
+// This sets all the options for the session
 const sessionOptions = {
     secret: secret,
     resave: false,
@@ -70,6 +73,8 @@ app.set("view engine", "ejs")
 app.set("views", path.join(__dirname, "views"))
 
 app.use("/orderupdate", express.raw({ type: "application/json" }))
+// All of these exclude the /orderupdate route as it requires the raw body
+// and can't be modified in any way for the verification to work
 app.use(/\/((?!orderupdate).)*/, express.json())
 app.use(/\/((?!orderupdate).)*/, express.urlencoded({ extended: true }))
 app.use(/\/((?!orderupdate).)*/, methodOverride("_method"))
@@ -78,6 +83,8 @@ app.use(/\/((?!orderupdate).)*/, session(sessionOptions))
 app.use(/\/((?!orderupdate).)*/, flash())
 app.use(/\/((?!orderupdate).)*/, express.static(path.join(__dirname, "public")))
 
+// This middleware adds the user to the request for easy verification
+// Also adds any info required for the templates
 app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
     req.session.cart = req.session.cart || []
     const user = await User.findById(req.session.userId) || null
@@ -92,18 +99,14 @@ app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
     next()
 }))
 
-
+// This renders the home page of the website
 app.get("/", catchAsync(async (req, res) => {
     const categories = await Category.find({})
     const products = await Product.find({})
     res.render("homePage", { products, categories })
 }))
 
-app.get("/account", isLoggedIn, (req, res) => {
-    res.render("account")
-})
-
-
+// This links all the routers to the corresponding links
 app.use("/products", productRoutes)
 app.use("/categories", categoryRoutes)
 app.use("/manageProducts", manageProductsRoute)
@@ -114,10 +117,13 @@ app.use("/user", userRoutes)
 app.use("/", authRoutes)
 
 
+// This serves an error if the page isn't found
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404))
 })
 
+// This handles any errors that may occur on the server side and handles them
+// appropriately, to prevent the server from crashing
 app.use((error, req, res, next) => {
     if (req.originalUrl === "/register") {
         req.flash("error", error.message)
