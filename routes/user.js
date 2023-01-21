@@ -57,7 +57,6 @@ router.get("/editDetails", catchAsync(async (req, res) => {
 // Validates the body to ensure it's in the right format
 router.put("/editdetails", validateUser, catchAsync(async (req, res) => {
     const { user } = req.body
-    console.log(user)
     // Checks to ensure the password matches the saved one
     if (await bcrypt.compare(user.password, req.user.password)) {
         // Removes the password from the object to ensure the password isn't updated
