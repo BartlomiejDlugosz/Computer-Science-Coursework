@@ -23,6 +23,7 @@ module.exports.validateUser = async (req, res, next) => {
 }
 
 module.exports.isLoggedIn = (req, res, next) => {
+    if (req.flash("ignoreAuth")[0]) return res.redirect("/")
     if (req.user) {
         return next()
     }
@@ -36,4 +37,19 @@ module.exports.isStaff = (req, res, next) => {
     }
     req.flash("error", "You are not authorized to do that!")
     res.redirect("/")
+}
+
+module.exports.savePreviousUrl = (req, res, next) => {
+    if (!req.headers.referer.includes("login") && !req.headers.referer.includes("register")) {
+        req.session.previousUrl = req.headers.referer
+    }
+    next()
+}
+
+module.exports.notLoggedIn = (req, res, next) => {
+    if (req.user) {
+        req.flash("error", "You are already logged in!")
+        return res.redirect(req.session.previousUrl || "/")
+    }
+    next()
 }
