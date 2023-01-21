@@ -1,5 +1,7 @@
+// Library imports
 const mongoose = require("mongoose")
 
+// Defines the schema for the order model
 const orderSchema = new mongoose.Schema({
     userId: {
         type: mongoose.Schema.Types.ObjectId,
@@ -71,4 +73,5 @@ const orderSchema = new mongoose.Schema({
     }
 })
 
+// Exports the order model
 module.exports = mongoose.model("Order", orderSchema)

@@ -1,34 +1,52 @@
+// Library Imports
 const express = require("express")
 const router = express.Router()
 
-const Product = require("../Models/Product")
-const { catchAsync, ExpressError } = require("../utils/errorhandling")
-const { isLoggedIn, isStaff } = require("../utils/middleware")
+// Function imports
+const { catchAsync } = require("../utils/errorhandling")
+const { isLoggedIn, isStaff, validateProduct } = require("../utils/middleware")
 
+// Model imports
+const Product = require("../Models/Product")
+
+// Defines the route for showing all products
 router.get("/", catchAsync(async (req, res) => {
     const products = await Product.find({})
     res.render("products", { products, title: "All Products" })
 }))
 
-router.post("/", isLoggedIn, isStaff, catchAsync(async (req, res) => {
-    const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
-    const newProduct = new Product({ name, price, description, images, discount, discountedPrice, categories, tags, stock })
-    const saved = await newProduct.save()
+// Uses the isLoggedIn and isStaff middleware on the other routes
+// to prevent unauthorised access
+router.use(isLoggedIn)
+router.use(isStaff)
+
+// Defines the route for adding a new product
+// Validates the body to ensure the correct information is supplied
+router.post("/", validateProduct, catchAsync(async (req, res) => {
+    const { product } = req.body
+    // Creates a product and displays a success message
+    const newProduct = new Product(product)
+    await newProduct.save()
     req.flash("success", "Successfully created product!")
     res.redirect("/manageproducts/all")
 }))
 
-router.patch("/:id", isLoggedIn, isStaff, catchAsync(async (req, res) => {
+// Defines the route for editing a product
+router.patch("/:id", validateProduct, catchAsync(async (req, res) => {
     const { id } = req.params
-    const { name, price, description, images, discount, discountedPrice, categories, tags, stock } = req.body
-    const product = await Product.findByIdAndUpdate(id, { name, price, description, images, discount, discountedPrice, categories, tags, stock }, { runValidators: true, new: true })
+    const { product } = req.body
+    // Finds the product and updates it
+    // runValidators ensures all the validation checks are still run
+    await Product.findByIdAndUpdate(id, product, { runValidators: true })
     req.flash("success", "Successfully updated product!")
     res.redirect("/manageproducts/all")
 }))
 
-router.delete("/:id", isLoggedIn, isStaff, catchAsync(async (req, res) => {
+// Defines route for deleting a product
+router.delete("/:id", catchAsync(async (req, res) => {
     const { id } = req.params
-    const product = await Product.findByIdAndDelete(id)
+    // Deletes the product and displays a success message
+    await Product.findByIdAndDelete(id)
     req.flash("success", "Successfully deleted product!")
     res.redirect("/manageproducts/all")
 }))

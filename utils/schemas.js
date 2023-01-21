@@ -1,5 +1,6 @@
 const Joi = require("joi")
 
+// This defines the user schema so that it can verify incomming information
 module.exports.userSchema = Joi.object({
     user: Joi.object({
         name: Joi.string().required().max(20).messages({
@@ -16,5 +17,29 @@ module.exports.userSchema = Joi.object({
         }),
         phone: Joi.string().optional().default("").allow(""),
         address: Joi.string().optional().default("").allow("")
+    })
+})
+
+// This defines the product schema so that it can verify incomming information
+module.exports.productSchema = Joi.object({
+    product: Joi.object({
+        name: Joi.string().required().messages({
+            "string.required": "Can't leave name empty"
+        }),
+        price: Joi.number().min(0).required().messages({
+            "number.required": "Can't leave price empty",
+            "number.min": "Price has to be greater than 0!"
+        }),
+        description: Joi.string().optional().allow(""),
+        images: Joi.array().optional(),
+        discount: Joi.boolean().default(false).optional(),
+        discountedPrice: Joi.number().min(0).default(0).optional().allow("").messages({
+            "number.min": "Discounted price has to be greater than 0!"
+        }),
+        categories: Joi.array().optional(),
+        tags: Joi.array().optional(),
+        stock: Joi.number().min(0).default(0).optional().messages({
+            "number.min": "Stock has to be greater than 0!"
+        })
     })
 })
