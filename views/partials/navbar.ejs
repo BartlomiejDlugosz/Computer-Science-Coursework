@@ -11,15 +11,15 @@
           <a class="nav-link <%= url === "/" ? "active" : "" %>" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= url === "/products" ? "active" : "" %>" href="/products">Products</a>
+          <a class="nav-link <%= url === "/products/" ? "active" : "" %>" href="/products">Products</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link <%= url === "/categories" ? "active" : "" %>" href="/categories">Categories</a>
+          <a class="nav-link <%= url === "/categories/" ? "active" : "" %>" href="/categories">Categories</a>
         </li>
       </ul>
       <div class="navbar-nav">
         <div class="nav-item">
-          <a class="nav-link position-relative <%= url === "/cart" ? "active" : "" %>" href="/cart">Cart
+          <a class="nav-link position-relative <%= url === "/cart/" ? "active" : "" %>" href="/cart">Cart
             [<%= cartLength %>]
             <!-- <span
               class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"><%= cartLength %><span
@@ -29,7 +29,7 @@
         </div>
         <% if (user) { %>
         <div class="nav-item">
-          <a class="nav-link <%= url === "/menu" ? "active" : "" %>" href="/menu">Account</a>
+          <a class="nav-link <%= url === "/account/" ? "active" : "" %>" href="/account">Account</a>
         </div>
         <div class="nav-item">
           <a class="nav-link" href="/logout">Logout</a>
