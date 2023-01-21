@@ -25,6 +25,7 @@ const cartRoutes = require("./routes/cart")
 const authRoutes = require("./routes/auth")
 const orderRoutes = require("./routes/order")
 const userRoutes = require("./routes/user")
+const ownerRoutes = require("./routes/owner")
 
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
 
@@ -114,6 +115,7 @@ app.use("/manageOrders", manageOrdersRoute)
 app.use("/cart", cartRoutes)
 app.use("/order", orderRoutes)
 app.use("/user", userRoutes)
+app.use("/", ownerRoutes)
 app.use("/", authRoutes)
 
 
