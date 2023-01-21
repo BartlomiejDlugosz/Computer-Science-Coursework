@@ -16,15 +16,20 @@ router.use(isStaff)
 
 // Defines the route to view all the orders
 router.get("/all", catchAsync(async (req, res) => {
-    const { status } = req.query
+    const { status, userId } = req.query
     let orders
+    const searchOptions = {}
     // Checks if a status is provided in the query (e.g. not started or dispatched)
     if (status) {
-        orders = await Order.find({ status }).sort({ date: 1 })
-    } else {
-        orders = await Order.find({}).sort({ date: 1 })
+        searchOptions.status = status
     }
-
+    // Allows filtering by user
+    if (userId) {
+        // Makes the return to menu button return to the user
+        res.locals.returnUrl = `/manageusers/${userId}`
+        searchOptions.userId = userId
+    }
+    orders = await Order.find(searchOptions).sort({ date: 1 })
     res.render("manageorders/all", { orders })
 }))
 

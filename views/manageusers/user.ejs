@@ -1,0 +1,49 @@
+<% layout("layouts/boilerplate") %>
+<div class="d-flex justify-content-between">
+    <a href="/manageusers" class="btn btn-danger mb-3">Return to Users</a>
+</div>
+<h2 class="display-5 mb-4">User #<%= user.id %>
+</h2>
+<div class="user-info">
+    <h3 class="mb-3">User Info</h3>
+    <div class="row">
+        <p class="col-sm-2">Name:</p>
+        <p class="col-sm-10">
+            <%= user.name %>
+        </p>
+    </div>
+    <div class="row">
+        <p class="col-sm-2">Email:</p>
+        <p class="col-sm-10">
+            <%= user.email %>
+        </p>
+    </div>
+    <div class="row">
+        <p class="col-sm-2">Phone:</p>
+        <p class="col-sm-10">
+            <%= user.phone ? user.phone : "-" %>
+        </p>
+    </div>
+    <div class="row">
+        <p class="col-sm-2">Orders:</p>
+        <p class="col-sm-10">
+            <a class="btn btn-primary" href="/manageorders/all?userId=<%= user.id %>">View orders</a>
+        </p>
+    </div>
+    <form action="/manageusers/<%= user.id %>?_method=PUT" method="POST">
+        <div class="form-group row mb-3">
+            <label for="permLvl" class="col-form-label col-sm-2">Permission Level:</label>
+            <div class="col-sm-8">
+                <select name="permLvl" id="permLvl" class="form-control">
+                    <option value="1" <%=user.permLvl===1 ? "selected" : "" %>>1</option>
+                    <option value="2" <%=user.permLvl===2 ? "selected" : "" %>>2</option>
+                    <option value="3" <%=user.permLvl===3 ? "selected" : "" %>>3</option>
+                </select>
+            </div>
+            <div class="col-sm-2">
+                <button class="btn btn-success form-control">Set</button>
+            </div>
+        </div>
+    </form>
+
+</div>

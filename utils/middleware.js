@@ -57,6 +57,16 @@ module.exports.isStaff = (req, res, next) => {
     res.redirect("/")
 }
 
+// Checks to see if the current user is the owner (defined by permLvl >= 3)
+module.exports.isOwner = (req, res, next) => {
+    if (req.user.permLvl >= 3) {
+        return next()
+    }
+    // Flash error if not owner
+    req.flash("error", "You are not authorized to do that!")
+    res.redirect("/")
+}
+
 // Saves the previous url the user visited
 module.exports.savePreviousUrl = (req, res, next) => {
     if (!req.headers.referer.includes("login") && !req.headers.referer.includes("register")) {

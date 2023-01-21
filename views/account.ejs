@@ -9,3 +9,7 @@
 <a href="/manageproducts/all" class="btn btn-primary">Manage Products</a>
 <a href="/manageorders/all" class="btn btn-primary">Manage Orders</a>
 <% } %>
+<br><br>
+<% if (user.permLvl >= 3) { %>
+<a href="/manageusers/" class="btn btn-primary">Manage Users</a>
+<% } %>

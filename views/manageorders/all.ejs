@@ -1,6 +1,6 @@
 <% layout("layouts/boilerplate") %>
 <div class="d-flex justify-content-between">
-    <a href="/account" class="btn btn-danger mb-5">Return to Menu</a>
+    <a href="<%= returnUrl ? returnUrl : "/account" %>" class="btn btn-danger mb-5">Return to Menu</a>
     <div class="">
         <a href="/manageorders/all?status=1" class="btn btn-secondary mb-5">Not started</a>
         <a href="/manageorders/all?status=2" class="btn btn-secondary mb-5">Dispatched</a>
