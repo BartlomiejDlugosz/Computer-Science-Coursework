@@ -6,7 +6,7 @@ const stripe = require('stripe')(process.env.STRIPE_KEY)
 const bcrypt = require("bcrypt")
 const User = require("../Models/User")
 const { catchAsync, ExpressError } = require("../utils/errorhandling")
-const { validateUser, isLoggedIn } = require("../utils/middleware")
+const { validateUser, isLoggedIn, savePreviousUrl, notLoggedIn } = require("../utils/middleware")
 const Product = require("../Models/Product")
 const Order = require("../Models/Order")
 const nodemailer = require("nodemailer")
@@ -25,14 +25,14 @@ const transporter = nodemailer.createTransport({
 
 const endpointSecret = process.env.SIGNING_SECRET;
 
-router.get("/login", (req, res) => {
+router.get("/login", savePreviousUrl, notLoggedIn, (req, res) => {
     res.render("user/login")
 })
-router.get("/register", (req, res) => {
+router.get("/register", savePreviousUrl, notLoggedIn, (req, res) => {
     res.render("user/register")
 })
 
-router.post("/login", catchAsync(async (req, res) => {
+router.post("/login", notLoggedIn, catchAsync(async (req, res) => {
     const { user: u } = req.body
     const user = await User.findOne({ email: u.email })
     if (user) {
@@ -50,7 +50,7 @@ router.post("/login", catchAsync(async (req, res) => {
     res.redirect("/login")
 }))
 
-router.post("/register", validateUser, catchAsync(async (req, res) => {
+router.post("/register", notLoggedIn, validateUser, catchAsync(async (req, res) => {
     const { user: u } = req.body
     const user = new User(u)
     await user.save()
@@ -67,7 +67,8 @@ router.get("/logout", (req, res) => {
     req.session.userId = null
     req.session.cart = []
     req.flash("success", "Logged out successfully!")
-    res.redirect("/")
+    req.flash("ignoreAuth", true)
+    res.redirect(req.headers.referer || "/")
 })
 
 router.get("/order", isLoggedIn, catchAsync(async (req, res) => {

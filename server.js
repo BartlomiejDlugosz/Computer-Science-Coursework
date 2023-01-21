@@ -89,9 +89,6 @@ app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
     const cart = user ? user.cart : req.session.cart
     const cartLength = cart.reduce((prev, current) => prev + current.qty, 0)
     res.locals.cartLength = cartLength
-    if (!(req.originalUrl.includes("login") || req.originalUrl.includes("register"))) {
-        req.session.previousUrl = req.originalUrl
-    }
     next()
 }))
 
@@ -102,8 +99,8 @@ app.get("/", catchAsync(async (req, res) => {
     res.render("homePage", { products, categories })
 }))
 
-app.get("/menu", isLoggedIn, (req, res) => {
-    res.render("menu")
+app.get("/account", isLoggedIn, (req, res) => {
+    res.render("account")
 })
 
 
