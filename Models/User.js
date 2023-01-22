@@ -35,7 +35,7 @@ const userSchema = new mongoose.Schema({
     address: String,
     cart: {
         type: [{
-            productId: {
+            id: {
                 type: mongoose.Schema.Types.ObjectId
             },
             qty: {

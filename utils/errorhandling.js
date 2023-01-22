@@ -3,7 +3,11 @@
 // app from crashing
 module.exports.catchAsync = func => {
     return function (req, res, next) {
-        func(req, res, next).catch(e => next(e))
+        func(req, res, next).catch(e => {
+            // Log the error for easier debugging
+            console.log(e)
+            next(e)
+        })
     }
 }
 

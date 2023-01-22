@@ -56,8 +56,8 @@ router.post("/login", notLoggedIn, catchAsync(async (req, res) => {
             // If the passwords match then the user is saved to the session
             req.session.userId = user.id
             // If the session contains a cart then it's transferred to the user
-            if (req.session.cart.length > 0) {
-                user.cart = req.session.cart
+            if (req.cart.getCartLength() > 0) {
+                user.cart = req.session.cart.cart
                 await user.save()
             }
             req.flash("success", "Successfully logged in!")
@@ -78,8 +78,8 @@ router.post("/register", notLoggedIn, validateUser, catchAsync(async (req, res) 
     // The userid is saved to the session
     req.session.userId = user.id
     // If the session contains a cart then it's transferred to the user
-    if (req.session.cart.length > 0) {
-        user.cart = req.session.cart
+    if (req.cart.getCartLength() > 0) {
+        user.cart = req.session.cart.cart
         await user.save()
     }
     req.flash("success", "Successfully created account!")
@@ -90,7 +90,7 @@ router.post("/register", notLoggedIn, validateUser, catchAsync(async (req, res) 
 router.get("/logout", (req, res) => {
     // Removes the users id from the session and their cart
     req.session.userId = null
-    req.session.cart = []
+    req.session.cart = null
     req.flash("success", "Logged out successfully!")
     // IgnoreAuth is to prevent the user being redirected straight to a login-required 
     // route so redirects to home instead
@@ -101,13 +101,13 @@ router.get("/logout", (req, res) => {
 // Defines the route to order
 router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     const line_items = []
-    const cart = req.user ? req.user.cart : req.session.cart
+    const cart = req.cart.cart
     let error = false
     // Goes through the cart and produces a new array for stripe
     for (let i = 0; i < cart.length; i++) {
         let product = cart[i]
         // Finds the product
-        const found = await Product.findById(product.productId.toString())
+        const found = await Product.findById(product.id.toString())
         if (found) {
             // Checks to see if the quantity is less than or equal to stock
             if (found.stock >= product.qty) {
@@ -162,7 +162,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
         mode: 'payment',
         // Will format the urls appropriately
         success_url: `${fullUrl}/order/success?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${fullUrl}/error`,
+        cancel_url: `${fullUrl}/cart`,
         shipping_address_collection: {
             allowed_countries: ["GB"]
         },
