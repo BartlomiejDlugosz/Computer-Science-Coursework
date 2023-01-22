@@ -25,9 +25,11 @@ const cartRoutes = require("./routes/cart")
 const authRoutes = require("./routes/auth")
 const orderRoutes = require("./routes/order")
 const userRoutes = require("./routes/user")
-const ownerRoutes = require("./routes/owner")
+const manageUsersRoute = require("./routes/manageUsers")
 
+// Function imports
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
+const { Cart } = require("./utils/cart")
 
 
 const dbUrl = "MONGO_DB_LINK_REDACTED"
@@ -87,16 +89,18 @@ app.use(/\/((?!orderupdate).)*/, express.static(path.join(__dirname, "public")))
 // This middleware adds the user to the request for easy verification
 // Also adds any info required for the templates
 app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
-    req.session.cart = req.session.cart || []
-    const user = await User.findById(req.session.userId) || null
-    req.user = user
+    const user = await User.findById(req.session.userId)
+    req.user = user || null
+    // Decide whether to use the user's cart or the session cart
+    const currentCart = user ? req.user.cart : (req.session.cart ? req.session.cart.cart : [])
+    // Create a new cart instance
+    // Requires a new instance each time as sessions can't store objects
+    req.cart = new Cart((user ? user.id : null), currentCart)
     res.locals.user = user
     res.locals.url = req.originalUrl
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
-    const cart = user ? user.cart : req.session.cart
-    const cartLength = cart.reduce((prev, current) => prev + current.qty, 0)
-    res.locals.cartLength = cartLength
+    res.locals.cartLength = req.cart.getCartLength()
     next()
 }))
 
@@ -115,7 +119,7 @@ app.use("/manageOrders", manageOrdersRoute)
 app.use("/cart", cartRoutes)
 app.use("/order", orderRoutes)
 app.use("/user", userRoutes)
-app.use("/", ownerRoutes)
+app.use("/manageusers", manageUsersRoute)
 app.use("/", authRoutes)
 
 
