@@ -69,8 +69,12 @@ module.exports.isOwner = (req, res, next) => {
 
 // Saves the previous url the user visited
 module.exports.savePreviousUrl = (req, res, next) => {
-    if (!req.headers.referer.includes("login") && !req.headers.referer.includes("register")) {
-        req.session.previousUrl = req.headers.referer
+    if (req.headers.referer) {
+        if (!req.headers.referer.includes("login") && !req.headers.referer.includes("register")) {
+            req.session.previousUrl = req.headers.referer
+        }
+    } else {
+        req.session.previousUrl = "/"
     }
     next()
 }
