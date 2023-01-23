@@ -135,6 +135,7 @@ app.use((error, req, res, next) => {
         req.flash("error", error.message)
         return res.redirect("/register")
     }
+    console.log(error)
     const { status = 500 } = error
     if (!error.message) error.message = "Oh no, Something went wrong!"
     res.status(status).render("error", { error })
