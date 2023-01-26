@@ -216,10 +216,11 @@ router.post("/orderupdate", express.json(), catchAsync(async (req, res) => {
             }
             // Defines all the variables required for creating a new order
             const date = new Date(event.created * 1000)
-            const total = event.data.object.amount_total / 100
-            const name = event.data.object.shipping.name
-            const address = event.data.object.shipping.address
-            const transactionId = event.data.object.payment_intent
+            const object = event.data.object
+            const total = object.amount_total / 100
+            const name = object.shipping.name
+            const address = object.shipping.address
+            const transactionId = object.payment_intent
 
             // Creates a new order with all the given information
             const newOrder = new Order({ userId: customerId, productIds, date, total, name, address, transactionId })
