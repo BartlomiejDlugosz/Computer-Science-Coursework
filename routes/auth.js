@@ -101,55 +101,32 @@ router.get("/logout", (req, res) => {
 // Defines the route to order
 router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     const line_items = []
-    const cart = req.cart.cart
-    let error = false
-    // Goes through the cart and produces a new array for stripe
-    for (let i = 0; i < cart.length; i++) {
-        let product = cart[i]
-        // Finds the product
-        const found = await Product.findById(product.id.toString())
-        if (found) {
-            // Checks to see if the quantity is less than or equal to stock
-            if (found.stock >= product.qty) {
-                // Addes a new object to the array containing the necessary information
-                line_items.push({
-                    price_data: {
-                        currency: "gbp",
-                        product_data: {
-                            name: found.name,
-                            description: found.description,
-                            // Stores the product id so it can be identified once processed
-                            metadata: { id: found.id }
-                        },
-                        // Uses either discounted price or real price and multiplies by 100
-                        // as it's required to be in pence. Round is used due to multiplying errors in javascript
-                        unit_amount: Math.round(found.discount ? found.discountedPrice * 100 : found.price * 100)
-                    },
-                    quantity: product.qty
-                })
-            } else {
-                // Removes the item if there's no stock or limits it if quantity is greater than stock
-                if (found.stock === 0) {
-                    cart.splice(i, 1)
-                } else {
-                    cart[i].qty = found.stock
-                }
-                error = true
-            }
-        }
-    }
+    const cart = req.cart
 
-    // If a modification to the cart has been made the user is alerted and taken back to their cart
-    // to review the changes
-    if (error) {
-        // New cart is saved
-        req.session.cart = cart
-        if (req.user) {
-            req.user.cart = cart
-            await req.user.save()
-        }
+    try {
+        await cart.validateCart()
+    } catch(e) {
         req.flash("error", "One or more items in your cart are out of stock and have been removed for you")
         return res.redirect("/cart")
+    }
+
+    for (let item of cart.cart) {
+        const found = await Product.findById(item.id)
+        line_items.push({
+            price_data: {
+                currency: "gbp",
+                product_data: {
+                    name: found.name,
+                    description: found.description,
+                    // Stores the product id so it can be identified once processed
+                    metadata: { id: found.id }
+                },
+                // Uses either discounted price or real price and multiplies by 100
+                // as it's required to be in pence. Round is used due to multiplying errors in javascript
+                unit_amount: Math.round(found.discount ? found.discountedPrice * 100 : found.price * 100)
+            },
+            quantity: item.qty
+        })
     }
 
     // This creates the full url that will be used for the success
