@@ -79,7 +79,7 @@ class Cart {
                     this.saveCart()
                     return new ExpressError("You have too many of this product in your cart!")
                 }
-                if (cartItem.qty <= 0) {
+                if (item.qty <= 0) {
                     this.removeItem(item.id)
                     this.saveCart()
                     return new ExpressError("Product was removed")
