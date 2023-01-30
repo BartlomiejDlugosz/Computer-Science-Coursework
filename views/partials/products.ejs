@@ -8,14 +8,14 @@
             <h5 class="card-title">
                 <%= product.name %>
             </h5>
-            <h6><b>£<%= product.price %></b>
+            <h6><b>£<%= product.discount ? product.discountedPrice : product.price %></b>
             </h6>
             <p class="card-text">
                 <%= product.description %>
             </p>
-            <a href="/products/<%= product.id %>" class="btn btn-outline-primary mb-3">View</a>
+            <a href="/products/<%= product.id %>" class="btn btn-outline-primary mb-3 mt-auto">View</a>
             <a href="/cart/add/<%= product.id %>?redirect=<%= url %>"
-                class="btn btn-outline-primary mt-auto addProduct <%=product.stock <= 0 ? 'disabled' : '' %>"><%=product.stock <= 0 ? "Out of Stock"
+                class="btn btn-outline-primary mt-auto <%=product.stock <= 0 ? 'disabled' : '' %>"><%=product.stock <= 0 ? "Out of Stock"
                                                 : "Add to Cart" %></a>
         </div>
     </div>
