@@ -15,9 +15,12 @@ router.get("/", catchAsync(async (req, res) => {
     res.render("products", { products, title: "All Products" })
 }))
 
+// Defines the route to show the information about a specific product
 router.get("/:id", catchAsync(async (req, res) => {
     const {id} = req.params
     const product = await Product.findById(id)
+    product.views += 1
+    product.save()
     res.render("viewProduct", {product})
 }))
 
