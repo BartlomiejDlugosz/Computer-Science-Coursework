@@ -15,6 +15,12 @@ router.get("/", catchAsync(async (req, res) => {
     res.render("products", { products, title: "All Products" })
 }))
 
+router.get("/:id", catchAsync(async (req, res) => {
+    const {id} = req.params
+    const product = await Product.findById(id)
+    res.render("viewProduct", {product})
+}))
+
 // Uses the isLoggedIn and isStaff middleware on the other routes
 // to prevent unauthorised access
 router.use(isLoggedIn)
