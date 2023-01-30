@@ -19,7 +19,7 @@
             </p>
             <a href="/products/<%= product.id %>" class="btn btn-outline-primary mb-3 mt-auto">View</a>
             <a href="/cart/add/<%= product.id %>?redirect=<%= url %>"
-                class="btn btn-outline-primary mt-auto <%=product.stock <= 0 ? 'disabled' : '' %>"><%=product.stock <= 0 ? "Out of Stock"
+                class="btn btn-outline-primary <%=product.stock <= 0 ? 'disabled' : '' %>"><%=product.stock <= 0 ? "Out of Stock"
                                                 : "Add to Cart" %></a>
         </div>
     </div>
