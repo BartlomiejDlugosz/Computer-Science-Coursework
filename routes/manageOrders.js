@@ -44,9 +44,9 @@ router.get("/:id", catchAsync(async (req, res) => {
 // Defines the route to update the status of a order
 router.put("/updatestatus/:id", catchAsync(async (req, res) => {
     const { id } = req.params
-    const { status } = req.body
+    const { status, trackingNumber } = req.body
     // Finds the order and updates it
-    await Order.findByIdAndUpdate(id, { status })
+    await Order.findByIdAndUpdate(id, { status, trackingNumber })
     req.flash("success", "Successfully updated order!")
     res.redirect(`/manageorders/${id}`)
 }))
