@@ -5,6 +5,7 @@ const { ExpressError } = require("./errorhandling")
 // Also removes any other unnecessary information
 module.exports.validateProduct = (req, res, next) => {
     // Checks to see if the categories are in an array, if not then it creates an array
+    req.body.product.discount = req.body.product.discount ? true : false
     if (!Array.isArray(req.body.product.categories)) req.body.product.categories = Array.of(req.body.product.categories)
     const { error } = productSchema.validate(req.body)
     if (error) {
