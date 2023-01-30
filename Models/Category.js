@@ -7,7 +7,19 @@ const categorySchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    description: String
+    description: String,
+    sales: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0
+    },
+    views: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0
+    }
 })
 
 // Exports the category model
