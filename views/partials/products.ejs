@@ -9,12 +9,11 @@
                 <%= product.name %>
             </h5>
             <% if (product.discount) { %>
-                <s style="color: red;">£<%= product.price %></s>
-                <h6><b>£<%= product.discountedPrice %></b>
+                <b><s style="color: red;">£<%= product.price %></s></b>
+                <h6><b>£<%= product.discountedPrice %></b></h6>
             <% } else { %>
-                <h6><b>£<%= product.price %></b>
+                <h6><b>£<%= product.price %></b></h6>
             <% } %>
-            </h6>
             <p class="card-text">
                 <%= product.description %>
             </p>
