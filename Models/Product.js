@@ -33,6 +33,18 @@ const productSchema = new mongoose.Schema({
         required: true,
         default: 0,
         min: 0
+    },
+    sales: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0
+    },
+    views: {
+        type: Number,
+        required: true,
+        default: 0,
+        min: 0
     }
 })
 
