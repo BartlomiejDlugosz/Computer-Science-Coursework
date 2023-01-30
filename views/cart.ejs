@@ -13,7 +13,7 @@
                     <h6><b>£<%= item.product.price %></b></h6>
                 <% } %>
                 <p class="card-text"><%= item.product.description %> </p>
-                <div class="row text-center mb-2 gx-0">
+                <div class="row text-center mb-2 gx-0 mt-auto">
                     <div class="col-sm-2"><a href="/cart/qty/remove/<%= item.product.id %>?redirect=<%= url %>"
                             class="btn btn-outline-primary py-auto w-100 <%= item.qty <= 1 ? 'disabled' : '' %>">-</a>
                     </div>
@@ -23,7 +23,7 @@
                     </div>
                 </div>
                 <a href="/cart/remove/<%= item.product.id %>?redirect=<%= url %>"
-                    class="btn btn-outline-primary mt-auto">Remove from Cart</a>
+                    class="btn btn-outline-primary">Remove from Cart</a>
             </div>
         </div>
     </div>
