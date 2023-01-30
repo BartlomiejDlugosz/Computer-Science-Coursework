@@ -103,6 +103,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     const line_items = []
     const cart = req.cart
 
+    // This will validate the cart by checking all the items are in stock, and quantities don't exceed the stock
     try {
         await cart.validateCart()
     } catch(e) {
