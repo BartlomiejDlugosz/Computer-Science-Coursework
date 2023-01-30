@@ -7,7 +7,14 @@
         <h1 class="col"><%= product.name %></h1>
     </div>
     <div class="row">
-        <p class="col"><b>£<%= product.discount ? product.discountedPrice : product.price %></b></p>
+        <p class="col">
+            <% if (product.discount) { %>
+                <b><s style="color: red;">£<%= product.price %></s></b>
+                <h6><b>£<%= product.discountedPrice %></b></h6>
+            <% } else { %>
+                <h6><b>£<%= product.price %></b></h6>
+            <% } %>
+        </p>
     </div>
     <div class="row">
         <p class="col"><%= product.description %></p>
