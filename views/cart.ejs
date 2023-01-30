@@ -5,20 +5,25 @@
     <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center item">
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
-                <h5 class="card-title name"><%= item.product.name %></h5>
-                <h6><b class="price"><%= item.product.price %></b></h6>
-                <p class="card-text description"><%= item.product.description %> </p>
+                <h5 class="card-title"><%= item.product.name %></h5>
+                <% if (product.discount) { %>
+                    <b><s style="color: red;">£<%= product.price %></s></b>
+                    <h6><b>£<%= product.discountedPrice %></b></h6>
+                <% } else { %>
+                    <h6><b>£<%= product.price %></b></h6>
+                <% } %>
+                <p class="card-text"><%= item.product.description %> </p>
                 <div class="row text-center mb-2 gx-0">
                     <div class="col-sm-2"><a href="/cart/qty/remove/<%= item.product.id %>?redirect=<%= url %>"
-                            class="btn btn-outline-primary change-quantity py-auto w-100 <%= item.qty <= 1 ? 'disabled' : '' %>">-</a>
+                            class="btn btn-outline-primary py-auto w-100 <%= item.qty <= 1 ? 'disabled' : '' %>">-</a>
                     </div>
                     <p class="qty col-sm-8 my-auto">Quantity: <%= item.qty %></p>
                     <div class="col-sm-2"><a href="/cart/qty/add/<%= item.product.id %>?redirect=<%= url %>"
-                            class="btn btn-outline-primary change-quantity py-auto w-100 <%= item.product.stock <= item.qty ? 'disabled' : '' %>">+</a>
+                            class="btn btn-outline-primary py-auto w-100 <%= item.product.stock <= item.qty ? 'disabled' : '' %>">+</a>
                     </div>
                 </div>
                 <a href="/cart/remove/<%= item.product.id %>?redirect=<%= url %>"
-                    class="btn btn-outline-primary mt-auto removeProduct">Remove from Cart</a>
+                    class="btn btn-outline-primary mt-auto">Remove from Cart</a>
             </div>
         </div>
     </div>
