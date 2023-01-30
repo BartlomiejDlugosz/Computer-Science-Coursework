@@ -73,7 +73,7 @@ class Cart {
         for (let item of this.cart) {
             // Finds the item and checks the quantity doesn't exceed the stock
             const stock = await getProductStock(item.id)
-            if (product) {
+            if (stock) {
                 if (item.qty > stock) {
                     item.qty = stock
                     this.saveCart()
