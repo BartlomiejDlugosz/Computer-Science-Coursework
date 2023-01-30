@@ -60,7 +60,7 @@
                             <h5 class="card-title">
                                 <%= product.id.name %>
                             </h5>
-                            <h6><b>£<%= product.id.price %></b>
+                            <h6><b>£<%= product.id.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
                             </h6>
                             <p class="card-text">
                                 <%= product.id.description %>

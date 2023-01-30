@@ -7,10 +7,10 @@
             <div class="card-body d-flex flex-column">
                 <h5 class="card-title"><%= item.product.name %></h5>
                 <% if (item.product.discount) { %>
-                    <b><s style="color: red;">£<%= item.product.price %></s></b>
-                    <h6><b>£<%= item.product.discountedPrice %></b></h6>
+                    <b><s style="color: red;">£<%= item.product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></s></b>
+                    <h6><b>£<%= item.product.discountedPrice.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b></h6>
                 <% } else { %>
-                    <h6><b>£<%= item.product.price %></b></h6>
+                    <h6><b>£<%= item.product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b></h6>
                 <% } %>
                 <p class="card-text"><%= item.product.description %> </p>
                 <div class="row text-center mb-2 gx-0 mt-auto">
