@@ -14,6 +14,7 @@
     </div>
     
     <div class="row">
-        <a href="/cart/add/<%= product.id %>" class="btn btn-success">Add to cart</a>
+        <a href="/cart/add/<%= product.id %>" class="btn btn-success <%=product.stock <= 0 ? 'disabled' : '' %>"><%=product.stock <= 0 ? "Out of Stock"
+            : "Add to Cart" %></a>
     </div>
 </div>
