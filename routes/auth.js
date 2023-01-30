@@ -106,7 +106,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     try {
         await cart.validateCart()
     } catch(e) {
-        req.flash("error", `One or more items in your cart are out of stock and have been removed for you ${e}`)
+        req.flash("error", `One or more items in your cart are out of stock and have been removed for you`)
         return res.redirect("/cart")
     }
 
