@@ -3,17 +3,17 @@
     <a href="javascript:window.history.back()" class="btn btn-danger mb-5">Return to Products</a>
 </div>
 <div class="order-info pb-5">
-    <h3>Product Info</h3>
     <div class="row">
-        <p class="col"><%= product.name %></p>
+        <h1 class="col"><%= product.name %></h1>
+    </div>
+    <div class="row">
+        <p class="col"><b>£<%= product.discount ? product.discountedPrice : product.price %></b></p>
     </div>
     <div class="row">
         <p class="col"><%= product.description %></p>
     </div>
+    
     <div class="row">
-        <p class="col"><%= product.discount ? product.discountedPrice : product.price %></p>
-    </div>
-    <div class="row">
-        <a href="/cart/add/<%= product.id %>" class="btn btn-success"></a>
+        <a href="/cart/add/<%= product.id %>" class="btn btn-success">Add to cart</a>
     </div>
 </div>
