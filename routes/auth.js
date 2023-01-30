@@ -106,7 +106,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
     try {
         await cart.validateCart()
     } catch(e) {
-        req.flash("error", `One or more items in your cart are out of stock and have been removed for you ${e.msg}`)
+        req.flash("error", `One or more items in your cart are out of stock and have been removed for you ${e}`)
         return res.redirect("/cart")
     }
 
@@ -188,6 +188,7 @@ router.post("/orderupdate", express.json(), catchAsync(async (req, res) => {
                 // Finds the product and updates it's stock accordingly
                 const product = await Product.findById(productId)
                 product.stock -= qty
+                product.sales += qty
                 product.save()
                 productIds.push({ id: productId, qty })
             }
