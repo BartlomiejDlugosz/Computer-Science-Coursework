@@ -51,7 +51,7 @@ router.delete("/:id", catchAsync(async(req, res) => {
     const {id} = req.params
     await Product.findByIdAndDelete(id)
     req.flash("success", "Successfully deleted category")
-    res.redirect("managecategories/all")
+    res.redirect("/managecategories/all")
 }))
 
 module.exports = router
