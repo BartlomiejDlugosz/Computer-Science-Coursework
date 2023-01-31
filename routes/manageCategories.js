@@ -22,7 +22,7 @@ router.get("/new", (req, res) => {
     res.render("managecategories/new")
 })
 
-router.get("/:id", catchAsync(async(res, res) => {
+router.get("/:id", catchAsync(async(req, res) => {
     const {id} = req.params
     const category = await Category.findById(id)
     res.render("managecategories/category", {category})
