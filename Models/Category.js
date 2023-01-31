@@ -27,7 +27,7 @@ categorySchema.pre("findByIdAndDelete", async function (next) {
     const products = await Product.find({categories: this.id})
     for (let product of products) {
         for (let i = 0; i < product.categories.length; i++) {
-            if (product.categories[i] === this.id) {
+            if (product.categories[i].toString() === this.id.toString()) {
                 product.categories.splice(i, 1)
                 await product.save()
                 break
