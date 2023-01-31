@@ -47,3 +47,5 @@ router.delete("/:id", catchAsync(async(req, res) => {
     req.flash("success", "Successfully deleted category")
     res.redirect("managecategories/all")
 }))
+
+module.exports = router
