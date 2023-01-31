@@ -1,5 +1,6 @@
 // Library imports
 const mongoose = require("mongoose")
+const Product = require("./Product")
 
 // Defines the schema for the category model
 const categorySchema = new mongoose.Schema({
@@ -20,6 +21,11 @@ const categorySchema = new mongoose.Schema({
         default: 0,
         min: 0
     }
+})
+
+categorySchema.pre("findByIdAndDelete", async function (next) {
+    const products = await Product.update({category: this.id}, {$pull: {category: this.id}})
+    next()
 })
 
 // Exports the category model
