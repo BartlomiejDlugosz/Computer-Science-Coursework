@@ -22,6 +22,12 @@ router.get("/new", (req, res) => {
     res.render("manageCategories/new")
 })
 
+router.get("/:id", catchAsync(async(res, res) => {
+    const {id} = req.params
+    const category = await Category.findById(id)
+    res.render("manageCategories/category", {category})
+}))
+
 // Defines the route to create a new category
 // Verifys the user is logged in, and a staff member
 router.post("/", validateCategory, catchAsync(async (req, res) => {
