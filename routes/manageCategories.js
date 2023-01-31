@@ -15,17 +15,17 @@ router.use(isStaff)
 
 router.get("/all", catchAsync(async (req, res) => {
     const categories = await Category.find({})
-    res.render("manageCategories/all", {categories})
+    res.render("managecategories/all", {categories})
 }))
 
 router.get("/new", (req, res) => {
-    res.render("manageCategories/new")
+    res.render("managecategories/new")
 })
 
 router.get("/:id", catchAsync(async(res, res) => {
     const {id} = req.params
     const category = await Category.findById(id)
-    res.render("manageCategories/category", {category})
+    res.render("managecategories/category", {category})
 }))
 
 // Defines the route to create a new category
@@ -36,7 +36,7 @@ router.post("/", validateCategory, catchAsync(async (req, res) => {
     const newCategory = new Category(category)
     await newCategory.save()
     req.flash("success", "Successfully created category!")
-    res.redirect("/categories")
+    res.redirect("/managecategories/all")
 }))
 
 router.patch("/:id", validateCategory, catchAsync(async(req, res) => {
