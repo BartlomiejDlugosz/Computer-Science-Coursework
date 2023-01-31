@@ -1,0 +1,22 @@
+<% layout("layouts/boilerplate") %>
+<div class="d-flex justify-content-between">
+    <a href="javascript:window.history.back()" class="btn btn-danger mb-5">Return to Menu</a>
+    <a href="/managecategories/new" class="btn btn-success mb-5">New Category</a>
+</div>
+<div class="row">
+    <% for (let category of categories) { %>
+    <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
+        <div class="card h-100">
+            <div class="card-body d-flex flex-column">
+                <h5 class="card-title">
+                    <%= category.name %>
+                </h5>
+                <p class="card-text">
+                    <%= category.description %>
+                </p>
+                <a href="/managecategories/<%= category.id %>" class="btn btn-outline-primary mt-auto">Manage</a>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</div>

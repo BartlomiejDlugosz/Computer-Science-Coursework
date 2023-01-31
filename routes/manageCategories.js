@@ -1,0 +1,49 @@
+// Library imports
+const express = require("express")
+const router = express.Router()
+
+//Function imports
+const { catchAsync } = require("../utils/errorhandling")
+const { isLoggedIn, isStaff, validateCategory } = require("../utils/middleware")
+
+// Model imports
+const Product = require("../Models/Product")
+const Category = require("../Models/Category")
+
+router.use(isLoggedIn)
+router.use(isStaff)
+
+router.get("/", catchAsync(async (req, res) => {
+    const categories = await Category.find({})
+    res.render("manageCategories/all", {categories})
+}))
+
+router.get("/new", (req, res) => {
+    res.render("manageCategories/new")
+})
+
+// Defines the route to create a new category
+// Verifys the user is logged in, and a staff member
+router.post("/", validateCategory, catchAsync(async (req, res) => {
+    const { category } = req.body
+    // Creates a new category with the providied name and description
+    const newCategory = new Category(category)
+    await newCategory.save()
+    req.flash("success", "Successfully created category!")
+    res.redirect("/categories")
+}))
+
+router.patch("/:id", validateCategory, catchAsync(async(req, res) => {
+    const {id} = req.params
+    const {category} = req.body
+    await Category.findByIdAndUpdate(id, category)
+    req.flash("success", "Successfully updated category")
+    res.redirect("/managecategories/all")
+}))
+
+router.delete("/:id", catchAsync(async(req, res) => {
+    const {id} = req.params
+    await Product.findByIdAndDelete(id)
+    req.flash("success", "Successfully deleted category")
+    res.redirect("managecategories/all")
+}))
