@@ -49,7 +49,7 @@ router.patch("/:id", validateCategory, catchAsync(async(req, res) => {
 
 router.delete("/:id", catchAsync(async(req, res) => {
     const {id} = req.params
-    await Product.findByIdAndDelete(id)
+    await Category.findByIdAndDelete(id)
     req.flash("success", "Successfully deleted category")
     res.redirect("/managecategories/all")
 }))
