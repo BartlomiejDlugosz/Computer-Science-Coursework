@@ -13,7 +13,7 @@ const Category = require("../Models/Category")
 router.use(isLoggedIn)
 router.use(isStaff)
 
-router.get("/", catchAsync(async (req, res) => {
+router.get("/all", catchAsync(async (req, res) => {
     const categories = await Category.find({})
     res.render("manageCategories/all", {categories})
 }))
