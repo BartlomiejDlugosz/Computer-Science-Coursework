@@ -1,4 +1,4 @@
-const { userSchema, productSchema } = require("./schemas")
+const { userSchema, productSchema, categorySchema } = require("./schemas")
 const { ExpressError } = require("./errorhandling")
 
 // This validates the body, ensuring it meets the format defined by the schema
@@ -17,7 +17,13 @@ module.exports.validateProduct = (req, res, next) => {
 }
 
 module.exports.validateCategory = (req, res, next) => {
-
+    const { error } = categorySchema.validate(req.body)
+    if (error) {
+        // Returns error if incorrect information supplied
+        const msg = error.details.map(el => el.message).join(",")
+        next(new ExpressError(msg, 400))
+    }
+    next()
 }
 
 module.exports.validateOrder = (req, res, next) => {

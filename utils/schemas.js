@@ -43,3 +43,14 @@ module.exports.productSchema = Joi.object({
         })
     })
 })
+
+module.exports.categorySchema = Joi.object({
+    category: Joi.object({
+        name: Joi.string().required().messages({
+            "string.required": "Can't leave name empty"
+        }),
+        description: Joi.string().required().messages({
+            "string.required": "Can't leave description empty"
+        })
+    })
+})

@@ -1,0 +1,33 @@
+<% layout("layouts/boilerplate") %>
+<div class="d-flex justify-content-between">
+    <a href="javascript:window.history.back()" class="btn btn-danger mb-5">Return to Categories</a>
+</div>
+<form action="/managecategories/<%= category.id %>?_method=PATCH" method="POST" class="mb-3 needs-validation" novalidate>
+    <div class="form-group row mb-3">
+        <label for="name" class="col-form-label col-sm-2">Name:</label>
+        <div class="col-sm-10">
+            <input type="text" name="category[name]" id="name" class="form-control" placeholder="Name"
+                value="<%= category.name %>" required>
+            <div class="invalid-feedback">
+                Please enter a name
+            </div>
+        </div>
+    </div>
+    <div class="form-group row mb-3">
+        <label for="description" class="col-form-label col-sm-2">Description:</label>
+        <div class="col-sm-10">
+            <input type="text" name="category[description]" id="description" class="form-control" placeholder="Description"
+                value="<%= category.description %>" required>
+            <div class="invalid-feedback">
+                Please enter a description
+            </div>
+        </div>
+    </div>
+
+    
+
+    <button class="btn btn-primary form-control">Save Category</button>
+</form>
+<form action="/managecategories/<%= category.id %>?_method=DELETE" method="POST" class="mb-5">
+    <button class="btn btn-danger form-control">Delete Category</button>
+</form>

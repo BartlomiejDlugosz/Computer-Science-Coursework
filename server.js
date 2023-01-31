@@ -26,6 +26,7 @@ const authRoutes = require("./routes/auth")
 const orderRoutes = require("./routes/order")
 const userRoutes = require("./routes/user")
 const manageUsersRoute = require("./routes/manageUsers")
+const manageCategoriesRoute = require("./routes/manageCategories")
 
 // Function imports
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
@@ -120,6 +121,7 @@ app.use("/cart", cartRoutes)
 app.use("/order", orderRoutes)
 app.use("/user", userRoutes)
 app.use("/manageusers", manageUsersRoute)
+app.use("/managecategories", manageCategoriesRoute)
 app.use("/", authRoutes)
 
 
