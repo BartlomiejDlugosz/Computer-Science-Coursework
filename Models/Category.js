@@ -24,7 +24,7 @@ const categorySchema = new mongoose.Schema({
 })
 
 // Defines the middleware for deleting a category. This removes the category from all the products containing the category
-categorySchema.pre("findByIdAndDelete", async function (next) {
+categorySchema.pre("findOneAndDelete", async function (next) {
     const products = await Product.find({categories: this.id})
     console.log(products)
     console.log(this.id)
