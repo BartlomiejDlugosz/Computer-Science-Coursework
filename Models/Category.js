@@ -28,6 +28,7 @@ categorySchema.pre("findOneAndDelete", async function (next) {
     console.log("RUNNING DELETE MIDDLEWARE")
     console.log(this.id)
     console.log(this.id.toString())
+    console.log("---")
     const products = await Product.updateMany({categories: this.id.toString()}, {$pull: {categories: this.id.toString()}})
     console.log(products)
     next()
