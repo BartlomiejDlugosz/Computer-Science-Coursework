@@ -1,6 +1,6 @@
 <% layout("layouts/boilerplate") %>
 <div class="d-flex justify-content-between">
-    <a href="javascript:window.history.back()" class="btn btn-danger mb-5">Return to Categories</a>
+    <a href="/managecategories/all" class="btn btn-danger mb-5">Return to Categories</a>
 </div>
 <form action="/managecategories/<%= category.id %>?_method=PATCH" method="POST" class="mb-3 needs-validation" novalidate>
     <div class="form-group row mb-3">
