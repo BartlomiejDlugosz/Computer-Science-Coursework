@@ -1,6 +1,6 @@
 <% layout("layouts/boilerplate") %>
 <div class="d-flex justify-content-between">
-    <a href="javascript:window.history.back()" class="btn btn-danger mb-5">Return to Products</a>
+    <a href="/manageproducts/all" class="btn btn-danger mb-5">Return to Products</a>
 </div>
 <form action="/products/<%= product.id %>?_method=PATCH" method="POST" class="mb-3 needs-validation" novalidate>
     <div class="form-group row mb-3">
@@ -97,4 +97,3 @@
 <form action="/products/<%= product.id %>?_method=DELETE" method="POST" class="mb-5">
     <button class="btn btn-danger form-control">Delete Product</button>
 </form>
-<a href="/manageproducts/all" class="btn btn-outline-danger mb-3">Return to Products</a>
