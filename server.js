@@ -129,7 +129,7 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
           }
         }
       })
-      res.render("searchResult", {products})
+      res.render("searchResult", {products, query})
 }))
  
 // This links all the routers to the corresponding links
