@@ -117,7 +117,9 @@ app.get("/search", (req, res) => {
 })
 
 app.get("/searchproduct", catchAsync(async (req, res) => {
+    console.log(req.query)
     const {query} = req.query
+    console.log(query)
     const products = await Product.find({
         $search: {
           index: "Product_Search",
@@ -129,6 +131,7 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
           }
         }
       })
+      console.log(products)
       res.render("searchResult", {products, query})
 }))
  
