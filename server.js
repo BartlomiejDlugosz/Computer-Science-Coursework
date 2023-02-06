@@ -112,6 +112,26 @@ app.get("/", catchAsync(async (req, res) => {
     res.render("homePage", { products, categories })
 }))
 
+app.get("/search", (req, res) => {
+    res.render("search")
+})
+
+app.get("/searchproduct", catchAsync(async (req, res) => {
+    const {query} = req.query
+    const products = await Product.find({
+        "$search": {
+          "index": "Product_Search",
+          "text": {
+            "query": query,
+            "path": {
+              "wildcard": "*"
+            }
+          }
+        }
+      })
+      res.render("searchResult", {products})
+}))
+ 
 // This links all the routers to the corresponding links
 app.use("/products", productRoutes)
 app.use("/categories", categoryRoutes)
