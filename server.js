@@ -119,12 +119,12 @@ app.get("/search", (req, res) => {
 app.get("/searchproduct", catchAsync(async (req, res) => {
     const {query} = req.query
     const products = await Product.find({
-        "$search": {
-          "index": "Product_Search",
-          "text": {
-            "query": query,
-            "path": {
-              "wildcard": "*"
+        $search: {
+          index: "Product_Search",
+          text: {
+            query,
+            path: {
+              wildcard: "*"
             }
           }
         }
