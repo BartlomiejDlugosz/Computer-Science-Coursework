@@ -44,6 +44,7 @@ module.exports.productSchema = Joi.object({
     })
 })
 
+// This defines the category schema so that it can verify incoming information
 module.exports.categorySchema = Joi.object({
     category: Joi.object({
         name: Joi.string().required().messages({
