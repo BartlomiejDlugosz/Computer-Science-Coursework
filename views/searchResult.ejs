@@ -14,5 +14,9 @@
     </div>
 </form>
 <div class="row">
-    <%- include("./partials/products") %>
+    <% if (products.length === 0) { %>
+        <p class="lead">No products found! Please refine your search query</p>
+    <% } else { %>
+        <%- include("./partials/products") %>
+    <% } %>
 </div>
