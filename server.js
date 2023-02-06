@@ -117,11 +117,8 @@ app.get("/search", (req, res) => {
 })
 
 app.get("/searchproduct", catchAsync(async (req, res) => {
-    console.log(req.query)
     const {query} = req.query
-    console.log(query)
     const products = await Product.find({$text: {$search: query}})
-    console.log(products)
     res.render("searchResult", {products, query})
 }))
  
