@@ -120,19 +120,9 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
     console.log(req.query)
     const {query} = req.query
     console.log(query)
-    const products = await Product.find({
-        $search: {
-          index: "Product_Search",
-          text: {
-            query,
-            path: {
-              wildcard: "*"
-            }
-          }
-        }
-      })
-      console.log(products)
-      res.render("searchResult", {products, query})
+    const products = await Product.find({$text: {$search: query}})
+    console.log(products)
+    res.render("searchResult", {products, query})
 }))
  
 // This links all the routers to the corresponding links
