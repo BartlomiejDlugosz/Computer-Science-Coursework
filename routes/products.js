@@ -1,10 +1,14 @@
 // Library Imports
 const express = require("express")
 const router = express.Router()
+const multer = require("multer")
 
 // Function imports
 const { catchAsync } = require("../utils/errorhandling")
 const { isLoggedIn, isStaff, validateProduct } = require("../utils/middleware")
+const { storage } = require("../cloudinary")
+
+const upload = multer({ storage })
 
 // Model imports
 const Product = require("../Models/Product")
@@ -17,11 +21,11 @@ router.get("/", catchAsync(async (req, res) => {
 
 // Defines the route to show the information about a specific product
 router.get("/:id", catchAsync(async (req, res) => {
-    const {id} = req.params
+    const { id } = req.params
     const product = await Product.findById(id)
     product.views += 1
     product.save()
-    res.render("viewProduct", {product})
+    res.render("viewProduct", { product })
 }))
 
 // Uses the isLoggedIn and isStaff middleware on the other routes
@@ -31,22 +35,26 @@ router.use(isStaff)
 
 // Defines the route for adding a new product
 // Validates the body to ensure the correct information is supplied
-router.post("/", validateProduct, catchAsync(async (req, res) => {
+router.post("/", upload.array("images"), validateProduct, catchAsync(async (req, res) => {
     const { product } = req.body
     // Creates a product and displays a success message
     const newProduct = new Product(product)
+    console.log(req.files)
+    newProduct.images = req.files.map(image => image.path)
     await newProduct.save()
     req.flash("success", "Successfully created product!")
     res.redirect("/manageproducts/all")
 }))
 
 // Defines the route for editing a product
-router.patch("/:id", validateProduct, catchAsync(async (req, res) => {
+router.patch("/:id", upload.array("images"), validateProduct, catchAsync(async (req, res) => {
     const { id } = req.params
     const { product } = req.body
     // Finds the product and updates it
     // runValidators ensures all the validation checks are still run
-    await Product.findByIdAndUpdate(id, product, { runValidators: true })
+    const p = await Product.findByIdAndUpdate(id, product, { runValidators: true })
+    p.images.push(...req.files.map(image => image.path))
+    await p.save()
     req.flash("success", "Successfully updated product!")
     res.redirect("/manageproducts/all")
 }))

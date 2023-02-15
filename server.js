@@ -1,3 +1,6 @@
+// Uses the env variables if in testing mode
+if (process.env.NODE_ENV !== "production") require("dotenv").config()
+
 // Library Imports
 const express = require("express")
 const mongoose = require("mongoose")
