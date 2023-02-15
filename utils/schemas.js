@@ -17,7 +17,7 @@ module.exports.userSchema = Joi.object({
         }),
         phone: Joi.string().optional().default("").allow(""),
         address: Joi.string().optional().default("").allow("")
-    })
+    }).required()
 })
 
 // This defines the product schema so that it can verify incomming information
@@ -31,7 +31,6 @@ module.exports.productSchema = Joi.object({
             "number.min": "Price has to be greater than 0!"
         }),
         description: Joi.string().optional().allow(""),
-        images: Joi.array().optional(),
         discount: Joi.boolean().default(false).optional(),
         discountedPrice: Joi.number().min(0).default(0).optional().allow("").messages({
             "number.min": "Discounted price has to be greater than 0!"
@@ -41,7 +40,7 @@ module.exports.productSchema = Joi.object({
         stock: Joi.number().min(0).default(0).optional().messages({
             "number.min": "Stock has to be greater than 0!"
         })
-    })
+    }).required()
 })
 
 module.exports.categorySchema = Joi.object({
@@ -52,5 +51,5 @@ module.exports.categorySchema = Joi.object({
         description: Joi.string().required().messages({
             "string.required": "Can't leave description empty"
         })
-    })
+    }).required()
 })
