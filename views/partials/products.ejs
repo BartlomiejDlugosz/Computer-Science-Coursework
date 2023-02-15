@@ -5,19 +5,22 @@
         <img src="<%= product.images[0] %>" class="card-img-top">
         <% } %>
         <div class="card-body d-flex flex-column">
-            <h5 class="card-title">
+            <h5 class="card-title mt-auto">
                 <%= product.name %>
             </h5>
             <% if (product.discount) { %>
-                <b><s style="color: red;">£<%= product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></s></b>
-                <h6><b>£<%= product.discountedPrice.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b></h6>
+            <b><s
+                    style="color: red;">£<%= product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></s></b>
+            <h6><b>£<%= product.discountedPrice.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
+            </h6>
             <% } else { %>
-                <h6><b>£<%= product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b></h6>
+            <h6><b>£<%= product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
+            </h6>
             <% } %>
             <p class="card-text">
                 <%= product.description %>
             </p>
-            <a href="/products/<%= product.id %>" class="btn btn-outline-primary mb-3 mt-auto">View</a>
+            <a href="/products/<%= product.id %>" class="btn btn-outline-primary mb-3">View</a>
             <a href="/cart/add/<%= product.id %>?redirect=<%= url %>"
                 class="btn btn-outline-primary <%=product.stock <= 0 ? 'disabled' : '' %>"><%=product.stock <= 0 ? "Out of Stock"
                                                 : "Add to Cart" %></a>
