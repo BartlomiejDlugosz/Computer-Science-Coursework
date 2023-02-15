@@ -1,0 +1,22 @@
+<% layout("layouts/boilerplate") %>
+<form action="/searchproduct" method="GET" class="mb-5 needs-validation" novalidate>
+    <div class="form-group row mb-3">
+        <label for="query" class="col-form-label col-sm-2">Search:</label>
+        <div class="col-sm-8">
+            <input type="text" name="query" id="query" class="form-control" placeholder="Search..." value="<%= query %>" required>
+            <div class="invalid-feedback">
+                Please enter some text
+            </div>
+        </div>
+        <div class="col-sm-2">
+            <button class="btn btn-primary form-control">Search</button>
+        </div>
+    </div>
+</form>
+<div class="row">
+    <% if (products.length === 0) { %>
+        <p class="lead">No products found! Please refine your search query</p>
+    <% } else { %>
+        <%- include("./partials/products") %>
+    <% } %>
+</div>
