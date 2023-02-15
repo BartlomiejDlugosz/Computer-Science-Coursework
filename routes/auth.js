@@ -130,7 +130,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
         })
     }
 
-    // This creates the full url that will be used for the success
+    // This creates the full url that will be used for the success url
     // This is to prevent having to change this between localhost and real url
     const fullUrl = req.protocol + '://' + req.get('host')
     // Creates a new stripe session with all the information

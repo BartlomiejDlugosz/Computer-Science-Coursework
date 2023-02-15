@@ -39,6 +39,7 @@ router.post("/", validateCategory, catchAsync(async (req, res) => {
     res.redirect("/managecategories/all")
 }))
 
+//Defines route to edit a category
 router.patch("/:id", validateCategory, catchAsync(async(req, res) => {
     const {id} = req.params
     const {category} = req.body
@@ -47,6 +48,7 @@ router.patch("/:id", validateCategory, catchAsync(async(req, res) => {
     res.redirect("/managecategories/all")
 }))
 
+// Defines route to delete category
 router.delete("/:id", catchAsync(async(req, res) => {
     const {id} = req.params
     await Category.findByIdAndDelete(id)
