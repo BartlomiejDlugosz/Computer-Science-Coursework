@@ -120,11 +120,48 @@ app.get("/search", (req, res) => {
 })
 
 app.get("/searchproduct", catchAsync(async (req, res) => {
-    const {query} = req.query
-    const products = await Product.find({$text: {$search: query}})
-    res.render("searchResult", {products, query})
+    const { query } = req.query
+    const products = await Product.find({})
+
+    let searchDict = {}
+    for (let char of query) { searchDict[char] = searchDict[char] ? searchDict[char] + 1 : 1 }
+    console.log(searchDict)
+    let result = []
+    let lastIndex = 0
+    let adding = false
+
+    for (let product of products) {
+        let score = 0
+        let currentString = ""
+        let dict = {}
+        let name = product.name
+        for (let i = 0; i < product.length; i++) {
+            dict[name[i]] = dict[name[i]] ? dict[name[i]] + 1 : 1
+            if (query.includes(name[i]) && dict[name[i]] <= searchDict[name[i]]) {
+                currentString += name[i]
+                adding = true
+            } else {
+                adding = false
+                score += currentString.length > 1 ? currentString.length * 10 : currentString.length
+                currentString = ""
+            }
+        }
+        if (result.length === 0) {
+            result.push({ product, score })
+        } else {
+            for (let i = 0; i < result.length; i++) {
+                if (score > result[i].score || i === result.length - 1) {
+                    result.splice(i, 0, { product, score })
+                    break
+                }
+            }
+        }
+    }
+    console.log(result)
+
+    res.render("searchResult", { products, query })
 }))
- 
+
 // This links all the routers to the corresponding links
 app.use("/products", productRoutes)
 app.use("/categories", categoryRoutes)
