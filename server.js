@@ -135,7 +135,7 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
         let currentString = ""
         let dict = {}
         let name = product.name
-        for (let i = 0; i < product.length; i++) {
+        for (let i = 0; i < name.length; i++) {
             dict[name[i]] = dict[name[i]] ? dict[name[i]] + 1 : 1
             if (query.includes(name[i]) && dict[name[i]] <= searchDict[name[i]]) {
                 currentString += name[i]
@@ -159,7 +159,7 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
     }
     console.log(result)
 
-    res.render("searchResult", { products, query })
+    res.render("searchResult", { result, query })
 }))
 
 // This links all the routers to the corresponding links
