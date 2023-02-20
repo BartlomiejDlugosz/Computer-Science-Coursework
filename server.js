@@ -150,8 +150,11 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
                 result.push({ product, score })
             } else {
                 for (let i = 0; i < result.length; i++) {
-                    if (score > result[i].score || i === result.length - 1) {
+                    if (score > result[i].score) {
                         result.splice(i, 0, { product, score })
+                        break
+                    } else if (i === result.length - 1) {
+                        result.push({ product, score })
                         break
                     }
                 }
