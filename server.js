@@ -124,8 +124,6 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
     query = query.toLowerCase()
     const products = await Product.find({})
 
-    let searchDict = {}
-    for (let char of query) { searchDict[char] = searchDict[char] ? searchDict[char] + 1 : 1 }
     let result = []
     let lastIndex = 0
     let adding = false
@@ -133,11 +131,9 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
     for (let product of products) {
         let score = 0
         let currentString = ""
-        let dict = {}
         let name = product.name.toLowerCase()
         for (let i = 0; i < name.length; i++) {
-            dict[name[i]] = dict[name[i]] ? dict[name[i]] + 1 : 1
-            if (query.includes(name[i]) && dict[name[i]] <= searchDict[name[i]]) {
+            if (query.includes(name[i])) {
                 currentString += name[i]
                 adding = true
             } else {
