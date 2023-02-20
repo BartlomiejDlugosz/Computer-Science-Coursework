@@ -125,7 +125,6 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
 
     let searchDict = {}
     for (let char of query) { searchDict[char] = searchDict[char] ? searchDict[char] + 1 : 1 }
-    console.log(searchDict)
     let result = []
     let lastIndex = 0
     let adding = false
@@ -146,13 +145,15 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
                 currentString = ""
             }
         }
-        if (result.length === 0) {
-            result.push({ product, score })
-        } else {
-            for (let i = 0; i < result.length; i++) {
-                if (score > result[i].score || i === result.length - 1) {
-                    result.splice(i, 0, { product, score })
-                    break
+        if (score > 0) {
+            if (result.length === 0) {
+                result.push({ product, score })
+            } else {
+                for (let i = 0; i < result.length; i++) {
+                    if (score > result[i].score || i === result.length - 1) {
+                        result.splice(i, 0, { product, score })
+                        break
+                    }
                 }
             }
         }
