@@ -14,9 +14,39 @@
     </div>
 </form>
 <div class="row">
-    <% if (products.length === 0) { %>
+    <%= result %>
+    <% if (result.length === 0) { %>
         <p class="lead">No products found! Please refine your search query</p>
     <% } else { %>
-        <%- include("./partials/products") %>
+        <% for (let item of result) { %>
+            <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
+                <div class="card h-100">
+                    <% if (item.product.images[0]) { %>
+                    <img src="<%= item.product.images[0] %>" class="card-img-top">
+                    <% } %>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title mt-auto">
+                            <%= item.product.name %>
+                        </h5>
+                        <% if (item.product.discount) { %>
+                        <b><s
+                                style="color: red;">£<%= item.product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></s></b>
+                        <h6><b>£<%= item.product.discountedPrice.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
+                        </h6>
+                        <% } else { %>
+                        <h6><b>£<%= item.product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
+                        </h6>
+                        <% } %>
+                        <p class="card-text">
+                            <%= item.product.description %>
+                        </p>
+                        <a href="/products/<%= item.product.id %>" class="btn btn-outline-primary mb-3">View</a>
+                        <a href="/cart/add/<%= item.product.id %>?redirect=<%= url %>"
+                            class="btn btn-outline-primary <%=item.product.stock <= 0 ? 'disabled' : '' %>"><%=item.product.stock <= 0 ? "Out of Stock"
+                                                            : "Add to Cart" %></a>
+                    </div>
+                </div>
+            </div>
+            <% } %>
     <% } %>
 </div>
