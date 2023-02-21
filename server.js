@@ -115,52 +115,70 @@ app.get("/", catchAsync(async (req, res) => {
     res.render("homePage", { products, categories })
 }))
 
+// This renders the form to search for a product
 app.get("/search", (req, res) => {
     res.render("search")
 })
 
+// This defines the route that the search form is submitted too
 app.get("/searchproduct", catchAsync(async (req, res) => {
+    // This extracts the search term and makes it lowercase as well as getting all the products
     let {query} = req.query
     query = query.toLowerCase()
     const products = await Product.find({})
 
     let result = []
     let lastIndex = 0
-    let adding = false
 
+    // This loops through all the products and uses a scoring system to find the most relevant
+    // products to the search query
+    // The scoring system works as follows:
+    // 1 point for any matching letter
+    // length * 10 points for consecutive letters in any order
+    // length * 100 points for consecutive letters in order that they appear in query
+    // These are then sorted from the highest score to lowest and rendered in the form
     for (let product of products) {
         let score = 0
         let currentString = ""
         let name = product.name.toLowerCase()
+        // Goes through each letter in the name of the product
         for (let i = 0; i < name.length; i++) {
+            // Checks if the letter is in the query
             if (query.includes(name[i])) {
+                // Adds the letter to the current string to keep track of consecutive letters
                 currentString += name[i]
-                adding = true
             } else {
-                adding = false
+                // If the letter isn't in the query then there are no more consecutive letters and
+                // The score is added for this set of letters based on the above criteria
                 score += currentString.length > 1 ? (query.includes(currentString) ? currentString.length * 100 : currentString.length * 10) : currentString.length
+                // String is then reset
                 currentString = ""
             }
         }
+        // Only adds items with a score greater than 1
         if (score > 0) {
+            // Adds the item to the array if empty
             if (result.length === 0) {
                 result.push({ product, score })
             } else {
+                // Loops through the array to see which position the item should be inserted into
                 for (let i = 0; i < result.length; i++) {
+                    // Inserts the item if the current item has a greater score
                     if (score > result[i].score) {
                         result.splice(i, 0, { product, score })
                         break
                     } else if (i === result.length - 1) {
+                        // Adds the item to the end
                         result.push({ product, score })
                         break
-                    }
+                        // Prevents from adding items beyond the 20th index
+                    } else if (i >= 20) break
                 }
             }
         }
     }
-    console.log(result)
-
-    res.render("searchResult", { result, query })
+    // Limits to only show the top 20 items
+    res.render("searchResult", { result: result.slice(0, 20), query })
 }))
 
 // This links all the routers to the corresponding links
