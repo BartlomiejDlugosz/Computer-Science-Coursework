@@ -128,7 +128,6 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
     const products = await Product.find({})
 
     let result = []
-    let lastIndex = 0
 
     // This loops through all the products and uses a scoring system to find the most relevant
     // products to the search query
