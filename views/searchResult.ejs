@@ -37,7 +37,7 @@
                         </h6>
                         <% } %>
                         <p class="card-text">
-                            <%= item.product.description %>
+                            <%= item.product.description %> <%= item.score %>
                         </p>
                         <a href="/products/<%= item.product.id %>" class="btn btn-outline-primary mb-3">View</a>
                         <a href="/cart/add/<%= item.product.id %>?redirect=<%= url %>"
