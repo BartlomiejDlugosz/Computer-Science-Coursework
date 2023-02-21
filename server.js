@@ -138,7 +138,7 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
                 adding = true
             } else {
                 adding = false
-                score += currentString.length > 1 ? currentString.length * 10 : currentString.length
+                score += currentString.length > 1 ? (query.includes(currentString) ? currentString.length * 100 : currentString.length * 10) : currentString.length
                 currentString = ""
             }
         }
