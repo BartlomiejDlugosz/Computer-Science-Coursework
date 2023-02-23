@@ -36,7 +36,6 @@ module.exports.productSchema = Joi.object({
             "number.min": "Discounted price has to be greater than 0!"
         }),
         categories: Joi.array().optional(),
-        tags: Joi.array().optional(),
         stock: Joi.number().min(0).default(0).optional().messages({
             "number.min": "Stock has to be greater than 0!"
         })
