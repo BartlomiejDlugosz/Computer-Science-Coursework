@@ -1,13 +1,36 @@
 const { userSchema, productSchema, categorySchema } = require("./schemas")
 const { ExpressError } = require("./errorhandling")
+const {presenceCheck, dataTypeCheck, lengthCheck, min, max} = require("./validation")
 
 // This validates the body, ensuring it meets the format defined by the schema
 // Also removes any other unnecessary information
 module.exports.validateProduct = (req, res, next) => {
     // Checks to see if the categories are in an array, if not then it creates an array
-    req.body.product.discount = req.body.product.discount ? true : false
-    if (!Array.isArray(req.body.product.categories)) req.body.product.categories = Array.of(req.body.product.categories)
-    console.log(req.body)
+    const {product} = req.body
+    presenceCheck(product, "Missing 'Product' object")
+    product.discount = product.discount ? true : false
+    if (!Array.isArray(product.categories)) product.categories = Array.of(product.categories)
+
+    presenceCheck(product.name, "Can't leave name empty")
+    dataTypeCheck(product.name, "string", "Name must be a string")
+    
+    presenceCheck(product.price, "Can't leave price empty")
+    dataTypeCheck(product.price, "number", "Price must be a number")
+    min(product.price, 0, "Price must be greater than 0")
+
+    dataTypeCheck(product.description, "string", "Description must be a string", true)
+
+    dataTypeCheck(product.discount, "boolean", "Discount must be a boolean", true)
+
+    dataTypeCheck(product.discountedPrice, "number", "Discounted price must be a number", true)
+    min(product.discountedPrice, 0, "Discounted price must be greater than 0")
+
+    dataTypeCheck(product.categories, "array", "Categories must be an array", true)
+
+    dataTypeCheck(product.stock, "number", "Stock must be a number", true)
+
+
+
     const { error } = productSchema.validate(req.body)
     if (error) {
         // Returns error if incorrect information supplied
