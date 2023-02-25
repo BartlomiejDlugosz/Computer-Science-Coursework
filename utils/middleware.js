@@ -1,19 +1,19 @@
 const { userSchema, productSchema, categorySchema } = require("./schemas")
 const { ExpressError } = require("./errorhandling")
-const {presenceCheck, dataTypeCheck, lengthCheck, min, max} = require("./validation")
+const { presenceCheck, dataTypeCheck, maxLengthCheck, minLengthCheck, min, max, emailCheck } = require("./validation")
 
 // This validates the body, ensuring it meets the format defined by the schema
 // Also removes any other unnecessary information
 module.exports.validateProduct = (req, res, next) => {
     // Checks to see if the categories are in an array, if not then it creates an array
-    const {product} = req.body
+    const { product } = req.body
     presenceCheck(product, "Missing 'Product' object")
     product.discount = product.discount ? true : false
     if (!Array.isArray(product.categories)) product.categories = Array.of(product.categories)
 
     presenceCheck(product.name, "Can't leave name empty")
     dataTypeCheck(product.name, "string", "Name must be a string")
-    
+
     presenceCheck(product.price, "Can't leave price empty")
     dataTypeCheck(product.price, "number", "Price must be a number")
     min(product.price, 0, "Price must be greater than 0")
@@ -22,31 +22,28 @@ module.exports.validateProduct = (req, res, next) => {
 
     dataTypeCheck(product.discount, "boolean", "Discount must be a boolean", true)
 
+    if (product.discount) presenceCheck(product.discountedPrice, "Can't leave discounted price empty")
     dataTypeCheck(product.discountedPrice, "number", "Discounted price must be a number", true)
-    min(product.discountedPrice, 0, "Discounted price must be greater than 0")
+    min(product.discountedPrice, 0, "Discounted price must be greater than 0", true)
 
     dataTypeCheck(product.categories, "array", "Categories must be an array", true)
 
     dataTypeCheck(product.stock, "number", "Stock must be a number", true)
+    min(product.stock, 0, "Stock must be greater than 0", true)
 
-
-
-    const { error } = productSchema.validate(req.body)
-    if (error) {
-        // Returns error if incorrect information supplied
-        const msg = error.details.map(el => el.message).join(",")
-        next(new ExpressError(msg, 400))
-    }
     next()
 }
 
 module.exports.validateCategory = (req, res, next) => {
-    const { error } = categorySchema.validate(req.body)
-    if (error) {
-        // Returns error if incorrect information supplied
-        const msg = error.details.map(el => el.message).join(",")
-        next(new ExpressError(msg, 400))
-    }
+    const { category } = req.body
+    presenceCheck(category, "Missing 'Category' object")
+
+    presenceCheck(category.name, "Can't leave name empty")
+    dataTypeCheck(category.name, "string", "Category name must be a string")
+
+    presenceCheck(category.description, "Can't leave description empty")
+    dataTypeCheck(category.description, "string", "Category description must be a string")
+
     next()
 }
 
@@ -57,12 +54,24 @@ module.exports.validateOrder = (req, res, next) => {
 // This validates the body, ensuring it meets the format defined by the schema
 // Also removes any other unnecessary information
 module.exports.validateUser = (req, res, next) => {
-    const { error } = userSchema.validate(req.body)
-    if (error) {
-        // Returns error if incorrect information supplied
-        const msg = error.details.map(el => el.message).join(",")
-        next(new ExpressError(msg, 400))
-    }
+    const { user } = req.body
+    console.log(user)
+    presenceCheck(user, "Missing 'User' object")
+
+    presenceCheck(user.name, "Can't leave name empty")
+    dataTypeCheck(user.name, "string", "Name has to be a string")
+    maxLengthCheck(user.name, 20, "Name has to be less than 20 characters long")
+
+    presenceCheck(user.email, "Can't leave email empty")
+    dataTypeCheck(user.email, "string", "Email has to be a string")
+    emailCheck(user.email, "Please provide a valid email")
+
+    presenceCheck(user.password, "Can't leave password empty")
+    dataTypeCheck(user.password, "string", "Password must be a string")
+    minLengthCheck(user.password, 6, "Password must be longer than 6 characters")
+
+    dataTypeCheck(user.phone, "string", "Phone must be a string", true)
+
     next()
 }
 

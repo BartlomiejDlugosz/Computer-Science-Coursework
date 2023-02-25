@@ -123,7 +123,7 @@ app.get("/search", (req, res) => {
 // This defines the route that the search form is submitted too
 app.get("/searchproduct", catchAsync(async (req, res) => {
     // This extracts the search term and makes it lowercase as well as getting all the products
-    let {query} = req.query
+    let { query } = req.query
     query = query.toLowerCase()
     const products = await Product.find({})
 
@@ -201,9 +201,13 @@ app.all("*", (req, res, next) => {
 // This handles any errors that may occur on the server side and handles them
 // appropriately, to prevent the server from crashing
 app.use((error, req, res, next) => {
+    console.log(req.originalUrl)
     if (req.originalUrl === "/register") {
         req.flash("error", error.message)
         return res.redirect("/register")
+    } else if (req.originalUrl === "/products") {
+        req.flash("error", error.message)
+        return res.redirect("/manageproducts/new")
     }
     console.log(error)
     const { status = 500 } = error

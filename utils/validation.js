@@ -6,41 +6,55 @@ module.exports.presenceCheck = (value, errMsg) => {
     if (value && value !== "") {
         return true
     }
-    return new ExpressError(errMsg || "Missing value")
+    throw new ExpressError(errMsg || "Missing value")
 }
 
 // Defines a data type check
 module.exports.dataTypeCheck = (value, dataType, errMsg, optional) => {
-    if (optional && !value) return true
+    if (optional && (value === undefined || value === null || value === "")) return true
     if (dataType === "array" && Array.isArray(value)) return true
+    else if (dataType === "number") value = parseFloat(value.toString())
+    else if (dataType === "boolean") value = value.toString() === "true"
     if (value && typeof value === dataType) {
         return true
     }
-    return new ExpressError(errMsg || "Data is invalid type")
+    throw new ExpressError(errMsg || "Data is invalid type")
 }
 
 // Defines a length check
-module.exports.lengthCheck = (value, length, errMsg, optional) => {
-    if (optional && !value) return true
+module.exports.maxLengthCheck = (value, length, errMsg, optional) => {
+    if (optional && (value === undefined || value === null || value === "")) return true
+    if (value && value.length <= length) {
+        return true
+    }
+    throw new ExpressError(errMsg || `Data must be longer than ${length} characters`)
+}
+module.exports.minLengthCheck = (value, length, errMsg, optional) => {
+    if (optional && (value === undefined || value === null || value === "")) return true
     if (value && value.length >= length) {
         return true
     }
-    return new ExpressError(errMsg || `Data must be longer than ${length} characters`)
+    throw new ExpressError(errMsg || `Data must be longer than ${length} characters`)
 }
 
 // Defines a range check
 module.exports.min = (value, low, errMsg, optional) => {
-    if (optional && !value) return true
-    if (value && value >= low) {
+    if (optional && (value === undefined || value === null || value === "")) return true
+    if (value && value > low) {
         return true
     }
-    return new ExpressError(errMsg || `Data must be greater than ${low}`)
+    throw new ExpressError(errMsg || `Data must be greater than ${low}`)
 }
 
 module.exports.max = (value, high, errMsg, optional) => {
-    if (optional && !value) return true
-    if (value && value <= high) {
+    if (optional && (value === undefined || value === null || value === "")) return true
+    if (value && value < high) {
         return true
     }
-    return new ExpressError(errMsg || `Data must be less than ${high}`)
+    throw new ExpressError(errMsg || `Data must be less than ${high}`)
+}
+
+module.exports.emailCheck = (value, errMsg) => {
+    if (value && value.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)) return true
+    throw new ExpressError(errMsg || "Invalid email")
 }

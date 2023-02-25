@@ -39,8 +39,7 @@ router.post("/", upload.array("images"), validateProduct, catchAsync(async (req,
     const { product } = req.body
     // Creates a product and displays a success message
     const newProduct = new Product(product)
-    console.log(req.files)
-    newProduct.images = req.files.map(image => image.path)
+    if (req.files) newProduct.images = req.files.map(image => image.path)
     await newProduct.save()
     req.flash("success", "Successfully created product!")
     res.redirect("/manageproducts/all")
