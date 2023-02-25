@@ -32,7 +32,6 @@ const userSchema = new mongoose.Schema({
     phone: {
         type: String
     },
-    address: String,
     cart: {
         type: [{
             id: {
