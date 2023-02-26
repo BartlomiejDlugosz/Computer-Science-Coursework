@@ -15,7 +15,7 @@ module.exports.dataTypeCheck = (value, dataType, errMsg, optional) => {
     if (dataType === "array" && Array.isArray(value)) return true
     else if (dataType === "number") value = parseFloat(value.toString())
     else if (dataType === "boolean") value = value.toString() === "true"
-    if (value && typeof value === dataType) {
+    if (typeof value === dataType) {
         return true
     }
     throw new ExpressError(errMsg || "Data is invalid type")
