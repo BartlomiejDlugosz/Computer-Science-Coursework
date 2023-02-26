@@ -82,13 +82,13 @@ app.set("views", path.join(__dirname, "views"))
 app.use("/orderupdate", express.raw({ type: "application/json" }))
 // All of these exclude the /orderupdate route as it requires the raw body
 // and can't be modified in any way for the verification to work
+app.use(/\/((?!orderupdate).)*/, express.static(path.join(__dirname, "public/")))
 app.use(/\/((?!orderupdate).)*/, express.json())
 app.use(/\/((?!orderupdate).)*/, express.urlencoded({ extended: true }))
 app.use(/\/((?!orderupdate).)*/, methodOverride("_method"))
 app.use(/\/((?!orderupdate).)*/, cookieParser())
 app.use(/\/((?!orderupdate).)*/, session(sessionOptions))
 app.use(/\/((?!orderupdate).)*/, flash())
-app.use(/\/((?!orderupdate).)*/, express.static(path.join(__dirname, "public")))
 
 // This middleware adds the user to the request for easy verification
 // Also adds any info required for the templates

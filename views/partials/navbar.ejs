@@ -19,6 +19,10 @@
       </ul>
       <div class="navbar-nav">
         <div class="nav-item">
+          <a href="/search"
+            class="nav-link position-relative <%= url === "/search/" || url.includes("/searchproduct/") ? "active" : "" %>">Search</a>
+        </div>
+        <div class="nav-item">
           <a class="nav-link position-relative <%= url === "/cart/" ? "active" : "" %>" href="/cart">Cart
             [<%= cartLength %>]
             <!-- <span
