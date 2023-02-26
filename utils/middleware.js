@@ -1,14 +1,12 @@
-const { userSchema, productSchema, categorySchema } = require("./schemas")
-const { ExpressError } = require("./errorhandling")
 const { presenceCheck, dataTypeCheck, maxLengthCheck, minLengthCheck, min, max, emailCheck } = require("./validation")
 
-// This validates the body, ensuring it meets the format defined by the schema
-// Also removes any other unnecessary information
+// This validates all the product information passed through in the body
 module.exports.validateProduct = (req, res, next) => {
-    // Checks to see if the categories are in an array, if not then it creates an array
     const { product } = req.body
     presenceCheck(product, "Missing 'Product' object")
     product.discount = product.discount ? true : false
+
+    // Checks to see if the categories are in an array, if not then it creates an array
     if (!Array.isArray(product.categories)) product.categories = Array.of(product.categories)
 
     presenceCheck(product.name, "Can't leave name empty")
@@ -17,6 +15,8 @@ module.exports.validateProduct = (req, res, next) => {
     presenceCheck(product.price, "Can't leave price empty")
     dataTypeCheck(product.price, "number", "Price must be a number")
     min(product.price, 0, "Price must be greater than 0")
+    console.log(product)
+    dataTypeCheck(product.briefDescription, "string", "Brief Description must be a string", true)
 
     dataTypeCheck(product.description, "string", "Description must be a string", true)
 
@@ -34,6 +34,7 @@ module.exports.validateProduct = (req, res, next) => {
     next()
 }
 
+// This validates all the category information passed through in the body
 module.exports.validateCategory = (req, res, next) => {
     const { category } = req.body
     presenceCheck(category, "Missing 'Category' object")
@@ -47,12 +48,7 @@ module.exports.validateCategory = (req, res, next) => {
     next()
 }
 
-module.exports.validateOrder = (req, res, next) => {
-
-}
-
-// This validates the body, ensuring it meets the format defined by the schema
-// Also removes any other unnecessary information
+// This validates all the user information passed through in the body
 module.exports.validateUser = (req, res, next) => {
     const { user } = req.body
     console.log(user)

@@ -12,6 +12,7 @@ const productSchema = new mongoose.Schema({
         required: true,
         min: 0
     },
+    briefDescription: String,
     description: String,
     images: [String],
     discount: {
