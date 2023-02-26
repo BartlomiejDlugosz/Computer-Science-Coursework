@@ -15,17 +15,30 @@ router.use(isStaff)
 
 router.get("/all", catchAsync(async (req, res) => {
     const categories = await Category.find({})
-    res.render("managecategories/all", {categories})
+    res.render("managecategories/all", { categories })
 }))
 
 router.get("/new", (req, res) => {
     res.render("managecategories/new")
 })
 
-router.get("/:id", catchAsync(async(req, res) => {
-    const {id} = req.params
+router.get("/:id", catchAsync(async (req, res) => {
+    const { id } = req.params
     const category = await Category.findById(id)
-    res.render("managecategories/category", {category})
+    res.render("managecategories/category", { category })
+}))
+
+router.get("/refresh/:id", catchAsync(async (req, res) => {
+    const { id } = req.params
+    const products = await Product.find({ categories: id })
+    let views = 0
+    let sales = 0
+    for (let product of products) {
+        views += product.views
+        sales += product.sales
+    }
+    await Category.findByIdAndUpdate(id, { views, sales })
+    res.redirect(`/managecategories/${id}`)
 }))
 
 // Defines the route to create a new category
@@ -40,17 +53,17 @@ router.post("/", validateCategory, catchAsync(async (req, res) => {
 }))
 
 //Defines route to edit a category
-router.patch("/:id", validateCategory, catchAsync(async(req, res) => {
-    const {id} = req.params
-    const {category} = req.body
+router.patch("/:id", validateCategory, catchAsync(async (req, res) => {
+    const { id } = req.params
+    const { category } = req.body
     await Category.findByIdAndUpdate(id, category)
     req.flash("success", "Successfully updated category")
     res.redirect("/managecategories/all")
 }))
 
 // Defines route to delete category
-router.delete("/:id", catchAsync(async(req, res) => {
-    const {id} = req.params
+router.delete("/:id", catchAsync(async (req, res) => {
+    const { id } = req.params
     await Category.findByIdAndDelete(id)
     req.flash("success", "Successfully deleted category")
     res.redirect("/managecategories/all")

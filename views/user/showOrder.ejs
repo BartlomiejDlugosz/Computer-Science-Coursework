@@ -63,7 +63,7 @@
                             <h6><b>£<%= product.id.price %></b>
                             </h6>
                             <p class="card-text">
-                                <%= product.id.description %>
+                                <%= product.id.briefDescription || product.id.description %>
                             </p>
                             <p>Qty: <b>
                                     <%= product.qty %>
