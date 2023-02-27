@@ -3,7 +3,7 @@ const { ExpressError } = require("./errorhandling")
 // Defines a presence check
 module.exports.presenceCheck = (value, errMsg) => {
     // Returns whatever the statement evaluates too
-    if (value && value !== "") {
+    if (value !== undefined && value !== null && value !== "") {
         return true
     }
     throw new ExpressError(errMsg || "Missing value")
@@ -12,6 +12,7 @@ module.exports.presenceCheck = (value, errMsg) => {
 // Defines a data type check
 module.exports.dataTypeCheck = (value, dataType, errMsg, optional) => {
     if (optional && (value === undefined || value === null || value === "")) return true
+    if (Array.isArray(value) && dataType !== "array") throw new ExpressError(errMsg || "Data is invalid type")
     if (dataType === "array" && Array.isArray(value)) return true
     else if (dataType === "number") value = parseFloat(value.toString())
     else if (dataType === "boolean") value = value.toString() === "true"
