@@ -98,7 +98,7 @@ app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
     // Decide whether to use the user's cart or the session cart
     const currentCart = user ? req.user.cart : (req.session.cart ? req.session.cart.cart : [])
     // Create a new cart instance
-    // Requires a new instance each time as sessions can't store objects
+    // Requires a new instance each time as sessions can't store objects and it's stored in string json
     req.cart = new Cart((user ? user.id : null), currentCart)
     res.locals.user = user
     res.locals.url = req.originalUrl
