@@ -51,7 +51,6 @@ module.exports.validateCategory = (req, res, next) => {
 // This validates all the user information passed through in the body
 module.exports.validateUser = (req, res, next) => {
     const { user } = req.body
-    console.log(user)
     presenceCheck(user, "Missing 'User' object")
 
     presenceCheck(user.name, "Can't leave name empty")
@@ -73,7 +72,7 @@ module.exports.validateUser = (req, res, next) => {
 
 // Checks to see if the current user is logged in
 module.exports.isLoggedIn = (req, res, next) => {
-    // If there's a flash to ignore auth, it redirect to the home page
+    // If there's a flash to ignore auth, it redirects to the home page
     if (req.flash("ignoreAuth")[0]) return res.redirect("/")
     if (req.user) {
         return next()
