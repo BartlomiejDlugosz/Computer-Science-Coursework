@@ -68,7 +68,7 @@ class Cart {
     }
 
     // Validates all the products in the cart to ensure all the quanitites are right
-    async validateCart() {
+    async validateCart(req) {
         // Loops through each item
         for (let item of this.cart) {
             // Finds the item and checks the quantity doesn't exceed the stock
@@ -76,17 +76,17 @@ class Cart {
             if (stock) {
                 if (item.qty > stock) {
                     item.qty = stock
-                    this.saveCart()
+                    this.saveCart(req)
                     return new ExpressError("You have too many of this product in your cart!")
                 }
                 if (item.qty <= 0) {
-                    this.removeItem(item.id)
-                    this.saveCart()
+                    this.removeItem(req, item.id)
+                    this.saveCart(req)
                     return new ExpressError("Product was removed")
                 }
             } else {
-                this.removeItem(item.id)
-                this.saveCart()
+                this.removeItem(req, item.id)
+                this.saveCart(req)
                 return new ExpressError("Product not found")
             }
         }
@@ -133,7 +133,7 @@ class Cart {
             cartItem.qty = stock
             return new ExpressError("You have too many of this product in your cart!")
         }
-        if (cartItem.qty <= 0) this.removeItem(itemId)
+        if (cartItem.qty <= 0) this.removeItem(req, itemId)
 
         this.saveCart(req)
         return { msg: "Successfully updated cart!", status: 200 }
