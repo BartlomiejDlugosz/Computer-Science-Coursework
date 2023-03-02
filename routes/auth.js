@@ -105,7 +105,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
 
     // This will validate the cart by checking all the items are in stock, and quantities don't exceed the stock
     try {
-        await cart.validateCart()
+        await cart.validateCart(req)
     } catch(e) {
         req.flash("error", `One or more items in your cart are out of stock and have been removed for you ${e}`)
         return res.redirect("/cart")
