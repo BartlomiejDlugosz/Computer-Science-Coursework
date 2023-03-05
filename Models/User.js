@@ -1,6 +1,9 @@
 // Library imports
+// This stores the mongoose library, responsible for handling database requests
 const mongoose = require("mongoose")
+// This stores the bcrypt library, responsible for encrypting passwords as well as authenicating them
 const bcrypt = require("bcrypt")
+// Imports the order model
 const Order = require("./Order")
 
 // Defines the schema for the user model
@@ -50,22 +53,23 @@ const userSchema = new mongoose.Schema({
     }
 })
 
-// Pre save middleware that encrypts the password if it was modified
+// This middleware runs before the object is saved. It checks if the password was modified, and if it was
+// then it encrypts it and sets the password to the new encrypted password
 userSchema.pre("save", async function (next) {
     if (!this.isModified("password")) return next()
     this.password = await bcrypt.hash(this.password, 12)
     next()
 })
 
-// Deletes any orders associated with the user after deleting
+// This middleware is run after the accoutn was deleted. It deletes any orders associated with the user
 userSchema.post("remove", async function (doc) {
     if (doc) {
         await Order.deleteMany({ _id: { $in: doc.orders } })
     }
 })
 
-// If the email is not unique then handle it
-// Uniqueness isn't a validator and has to be handled separately
+// This middleware is to handle the error if the email isn't unique. Uniqueness isn't a validator in mongoose
+// and instead throws an error so this has to be handled seperatley
 userSchema.post("save", function (error, doc, next) {
     if (error.name === "MongoServerError" && error.code === 11000 && error.keyValue.email) {
         next(new Error("Email address was already taken, please choose a different one."));

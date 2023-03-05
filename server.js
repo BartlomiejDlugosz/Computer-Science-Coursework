@@ -1,25 +1,39 @@
-// Uses the env variables if in testing mode
+// Uses the env variables if in testing mode, these contain sensitive information
 if (process.env.NODE_ENV !== "production") require("dotenv").config()
 
 // Library Imports
+// Contains the express library responsible for handling web requests
 const express = require("express")
+// Contains the mongoose library which is responsible for connecting to the database
 const mongoose = require("mongoose")
+// Contains the path library which is used for defining file routes relative to the current directory
 const path = require("path")
+// Contains the methodOverride library which responsible for converting some get requests to patch and delete requests
 const methodOverride = require("method-override")
+// Contains the ejsMate library which is used for rendering HTML templates
 const ejsMate = require("ejs-mate")
+// Contains the cookie parser library which parses cookies passed through in the request
 const cookieParser = require("cookie-parser")
+// Contains the session library which is responsible for storing session info related to the current device
 const session = require("express-session")
+// Contains the flash library which is used to flash messages (Displays a message that dissapears after the page is refreshed)
 const flash = require("connect-flash")
+// Contains the mongo store library which connects the session to the mongo database to be used in a production environment
 const MongoStore = require("connect-mongo")
 
+// Initializes the express library and greates the app object
 const app = express()
 
 // Model imports
+// Imports the user model
 const User = require("./Models/User")
+// Imports the product model
 const Product = require("./Models/Product")
+// Imports the category model
 const Category = require("./Models/Category")
 
 // Route imports
+// This imports all the routes from the routes folder
 const productRoutes = require("./routes/products")
 const categoryRoutes = require("./routes/categories")
 const manageProductsRoute = require("./routes/manageProducts")
@@ -32,24 +46,30 @@ const manageUsersRoute = require("./routes/manageUsers")
 const manageCategoriesRoute = require("./routes/manageCategories")
 
 // Function imports
+// Imports the error handling functions
 const { catchAsync, ExpressError } = require("./utils/errorhandling")
+// Imports the cart object
 const { Cart } = require("./utils/cart")
 
-
+// This is the database url that mongo will connect to
 const dbUrl = "MONGO_DB_LINK_REDACTED"
 
-// Connects to the mongo database
+// Connects to the mongo database with the given url
 mongoose.connect(dbUrl)
     .then(data => {
         console.log("Connected to mongo")
     })
     .catch(err => {
+        // Logs any errors
         console.log("An error has occured!")
         console.log(err)
     })
 
+// Defines the port, either use the port provided or default to 3000, this is because web hosts provide their own ports to use
 const PORT = process.env.PORT || 3000
+// Use the signing secret provided or default to the standard one
 const secret = process.env.SECRET || "secret"
+// Prints if a secure secret isn't being used
 if (secret === "secret") console.log("NOT USING SECURE SECRET")
 
 // This sets all the options for the session
@@ -59,9 +79,11 @@ const sessionOptions = {
     saveUninitialized: true,
     cookie: {
         httpOnly: true,
+        // Sets the expiry date of the session
         expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
         maxAge: 1000 * 60 * 60 * 24 * 7
     },
+    // Makes sure the mongo database is used for storing session info instead of local memory which is prone to memory leaks etc.
     store: MongoStore.create({
         mongoUrl: dbUrl,
         secret: secret,
@@ -69,37 +91,49 @@ const sessionOptions = {
     })
 }
 
+// Logs any error that may occur with the session
 sessionOptions.store.on("error", function (e) {
     console.log("SESSION STORE ERROR")
     console.log(e)
 })
 
+// Uses the ejs template renderer
 app.engine("ejs", ejsMate)
-
+// Sets the view engine to ejs so templates are rendered appropriatley
 app.set("view engine", "ejs")
+// Sets the views folder, this is where html templates will be searched for
 app.set("views", path.join(__dirname, "views"))
 
+// This middleware is only used on the "/orderupdate" route and it passes through the raw json which is required for verification
 app.use("/orderupdate", express.raw({ type: "application/json" }))
 // All of these exclude the /orderupdate route as it requires the raw body
 // and can't be modified in any way for the verification to work
-app.use(/\/((?!orderupdate).)*/, express.static(path.join(__dirname, "public/")))
+// This parses the body using json
 app.use(/\/((?!orderupdate).)*/, express.json())
+// This parses form bodys that are sent in the url
 app.use(/\/((?!orderupdate).)*/, express.urlencoded({ extended: true }))
+// This defines the variable that will be used for the method override (e.g. _method=DELETE will be converted to a delete request)
 app.use(/\/((?!orderupdate).)*/, methodOverride("_method"))
+// This uses the cookie parser to parse the cookies
 app.use(/\/((?!orderupdate).)*/, cookieParser())
+// This adds the session object to all the requests
 app.use(/\/((?!orderupdate).)*/, session(sessionOptions))
+// This adds the flash object to all the requests
 app.use(/\/((?!orderupdate).)*/, flash())
 
 // This middleware adds the user to the request for easy verification
 // Also adds any info required for the templates
 app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
+    // Attempts to find the user
     const user = await User.findById(req.session.userId)
+    // Sets the user on the request to either the user or null if there is no user
     req.user = user || null
-    // Decide whether to use the user's cart or the session cart
+    // Decide whether to use the user's cart or the session cart based on whether the user is logged in or not
     const currentCart = user ? req.user.cart : (req.session.cart ? req.session.cart.cart : [])
     // Create a new cart instance
-    // Requires a new instance each time as sessions can't store objects and it's stored in string json
+    // Requires a new instance each time as sessions can't store objects
     req.cart = new Cart((user ? user.id : null), currentCart)
+    // Adds all the information to the templates so they can render the right information
     res.locals.user = user
     res.locals.url = req.originalUrl
     res.locals.success = req.flash("success")
@@ -110,8 +144,10 @@ app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
 
 // This renders the home page of the website
 app.get("/", catchAsync(async (req, res) => {
+    // Retrieves all the categories and products from the database
     const categories = await Category.find({})
     const products = await Product.find({})
+    // Renders the home page with the products and categories
     res.render("homePage", { products, categories })
 }))
 
@@ -122,11 +158,12 @@ app.get("/search", (req, res) => {
 
 // This defines the route that the search form is submitted too
 app.get("/searchproduct", catchAsync(async (req, res) => {
-    // This extracts the search term and makes it lowercase as well as getting all the products
+    // This extracts the search term and makes it lowercase
     let { query } = req.query
     query = query.toLowerCase()
+    // Gets all the products
     const products = await Product.find({})
-
+    // This is where the results will be stored ranked from most accurate to worst
     let result = []
 
     // This loops through all the products and uses a scoring system to find the most relevant
@@ -176,11 +213,11 @@ app.get("/searchproduct", catchAsync(async (req, res) => {
             }
         }
     }
-    // Limits to only show the top 20 items
+    // Renders the results, limiting the results to 20 items
     res.render("searchResult", { result: result.slice(0, 20), query })
 }))
 
-// This links all the routers to the corresponding links
+// This uses all the routes defined in the routes file. These routes will all be prefixed with the prefix defined
 app.use("/products", productRoutes)
 app.use("/categories", categoryRoutes)
 app.use("/manageProducts", manageProductsRoute)
@@ -193,7 +230,7 @@ app.use("/managecategories", manageCategoriesRoute)
 app.use("/", authRoutes)
 
 
-// This serves an error if the page isn't found
+// This catches any requests that haven't been handled by any other routes and displays a 404 error
 app.all("*", (req, res, next) => {
     next(new ExpressError("Page Not Found", 404))
 })
@@ -201,20 +238,22 @@ app.all("*", (req, res, next) => {
 // This handles any errors that may occur on the server side and handles them
 // appropriately, to prevent the server from crashing
 app.use((error, req, res, next) => {
-    console.log(req.originalUrl)
-    if (req.originalUrl === "/register") {
+    // Flashes the error if the error came from the register or products route
+    if (req.originalUrl.includes("/register")) {
         req.flash("error", error.message)
         return res.redirect("/register")
-    } else if (req.originalUrl === "/products") {
+    } else if (req.originalUrl.includes("/products")) {
         req.flash("error", error.message)
         return res.redirect("/manageproducts/new")
     }
+    // Logs the error and renders a error page
     console.log(error)
     const { status = 500 } = error
     if (!error.message) error.message = "Oh no, Something went wrong!"
     res.status(status).render("error", { error })
 })
 
+// This makes the app listen on the defined port for any incoming requests
 app.listen(PORT, () => {
     console.log(`Running on port ${PORT}!`)
 })
