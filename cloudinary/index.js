@@ -1,5 +1,7 @@
 // Library imports
+// This stores the cloudinary library, used for handling images
 const cloudinary = require("cloudinary").v2
+// This stores the cloudinary storage responsible for uploading images to the cloud and saving them
 const { CloudinaryStorage } = require("multer-storage-cloudinary")
 
 // Configures the cloudinary storage
@@ -9,7 +11,7 @@ cloudinary.config({
     api_secret: process.env.API_SECRET
 })
 
-// Creates a storage object to be used to save images
+// This configures a new cloudinary storage object which will be responsible for uploading images
 const storage = new CloudinaryStorage({
     cloudinary,
     params: {
@@ -18,6 +20,7 @@ const storage = new CloudinaryStorage({
     }
 })
 
+// This exports the cloudinary and the storage objects
 module.exports = {
     cloudinary,
     storage

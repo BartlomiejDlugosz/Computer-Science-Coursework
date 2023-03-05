@@ -1,4 +1,5 @@
 // Library imports
+// This stores the mongoose library, responsible for handling database requests
 const mongoose = require("mongoose")
 
 // Defines the schema for the order model
@@ -12,10 +13,12 @@ const orderSchema = new mongoose.Schema({
         type: [{
             id: {
                 type: mongoose.Schema.Types.ObjectId,
+                // The ref field is used so we can easily populate this field when retrieving this object at a later date
                 ref: "Product",
                 _id: false
             },
             qty: Number,
+            // This prevents from a id field being automatically added on
             _id: false
         }],
         required: true
