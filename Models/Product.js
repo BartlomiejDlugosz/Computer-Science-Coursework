@@ -1,4 +1,5 @@
 // Library imports
+// This stores the mongoose library, responsible for handling database requests
 const mongoose = require("mongoose")
 
 // Defines the schema for the product model
