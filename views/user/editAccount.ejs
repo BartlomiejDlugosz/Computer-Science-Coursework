@@ -1,8 +1,11 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
 <div class="d-flex justify-content-between">
     <a href="/account" class="btn btn-danger mb-5">Return to Menu</a>
 </div>
+<!-- Creates a form for the user to submit their new information -->
 <form action="/user/editdetails?_method=PUT" method="POST" class="mb-5 needs-validation" novalidate>
+    <!-- Creates the name field and prefills it -->
     <div class="form-group row mb-3">
         <label for="name" class="col-form-label col-sm-2">Name*:</label>
         <div class="col-sm-10">
@@ -13,6 +16,7 @@
             </div>
         </div>
     </div>
+    <!-- Creates the phone number field and prefills it -->
     <div class="form-group row mb-3">
         <label for="phone" class="col-form-label col-sm-2">Phone number:</label>
         <div class="col-sm-10">
@@ -23,7 +27,7 @@
             </div>
         </div>
     </div>
-
+    <!-- Creates the email field and prefills it -->
     <div class="form-group row mb-3">
         <label for="email" class="col-form-label col-sm-2">Email*:</label>
         <div class="col-sm-10">
@@ -35,7 +39,7 @@
         </div>
     </div>
     <br>
-
+    <!-- Creates the password field -->
     <div class="form-group row mb-3">
         <label for="password" class="col-form-label col-sm-2">Enter Password*:</label>
         <div class="col-sm-10">
@@ -46,6 +50,6 @@
             </div>
         </div>
     </div>
-
+    <!-- Submits the information -->
     <button class="btn btn-primary form-control">Save</button>
 </form>

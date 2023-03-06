@@ -1,7 +1,10 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
+<!-- Displays the title that was passed in -->
 <h1 class="display-3 mb-3">
     <%= title %>
 </h1>
 <div class="row">
+    <!-- Uses the products template to render all the products. This is to reduce code repetition and improve consistency -->
     <%- include("./partials/products") %>
 </div>

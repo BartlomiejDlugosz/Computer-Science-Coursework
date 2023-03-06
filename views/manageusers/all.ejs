@@ -1,4 +1,6 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
+<!-- Creates the menu and also creates buttons to filter through users -->
 <div class="d-flex justify-content-between">
     <a href="/account" class="btn btn-danger mb-5">Return to Menu</a>
     <div class="">
@@ -9,6 +11,7 @@
     </div>
 </div>
 <div class="row">
+    <!-- Loop through all the users and display them in a card -->
     <% for (let user of users) { %>
     <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
         <div class="card h-100">

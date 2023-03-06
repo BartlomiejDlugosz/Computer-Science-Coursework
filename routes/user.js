@@ -52,7 +52,7 @@ router.get("/orders/:id", catchAsync(async (req, res) => {
 }))
 
 // Defines route for displaying the form to edit their account details
-router.get("/editDetails", catchAsync(async (req, res) => {
+router.get("/editdetails", catchAsync(async (req, res) => {
     // Checks if the user has any prefilled info from the last submit
     const previous = req.flash("previous")
     // If the length of the array is greater than 0 then they already prefilled some information before

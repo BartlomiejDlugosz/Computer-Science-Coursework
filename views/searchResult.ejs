@@ -1,4 +1,6 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
+<!-- Creates a form where the user can edit their search or search for a different product -->
 <form action="/searchproduct" method="GET" class="mb-5 needs-validation" novalidate>
     <div class="form-group row mb-3">
         <label for="query" class="col-form-label col-sm-2">Search:</label>
@@ -15,12 +17,15 @@
     </div>
 </form>
 <div class="row">
+    <!-- Displays a message if no products have been found -->
     <% if (result.length === 0) { %>
     <p class="lead">No products found! Please refine your search query</p>
     <% } else { %>
+    <!-- Loops through the products that were found and displays them -->
     <% for (let item of result) { %>
     <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
         <div class="card h-100">
+            <!-- Shows an image if there is one on the product -->
             <% if (item.product.images[0]) { %>
             <img src="<%= item.product.images[0] %>" class="card-img-top">
             <% } %>
@@ -28,6 +33,7 @@
                 <h5 class="card-title mt-auto">
                     <%= item.product.name %>
                 </h5>
+                <!-- Checks if there's a discount and formats the price correctly -->
                 <% if (item.product.discount) { %>
                 <b><s
                         style="color: red;">£<%= item.product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></s></b>
@@ -37,9 +43,11 @@
                 <h6><b>£<%= item.product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
                 </h6>
                 <% } %>
+                <!-- Uses the brief description if one exists or the full description -->
                 <p class="card-text">
                     <%= item.product.briefDescription || item.product.description %>
                 </p>
+                <!-- Routes the links to the show page and the add to cart button -->
                 <a href="/products/<%= item.product.id %>" class="btn btn-outline-primary mb-3">View</a>
                 <a href="/cart/add/<%= item.product.id %>?redirect=<%= url %>"
                     class="btn btn-outline-primary <%=item.product.stock <= 0 ? 'disabled' : '' %>"><%=item.product.stock <= 0 ? "Out of Stock"

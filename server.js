@@ -148,7 +148,8 @@ app.get("/", catchAsync(async (req, res) => {
     const categories = await Category.find({})
     const products = await Product.find({})
     // Renders the home page with the products and categories
-    res.render("homePage", { products, categories })
+    // The products and categories are limited to 4 categories and 20 products to reduce clutter from the home page
+    res.render("homePage", { products: products.slice(0, 20), categories: categories.slice(0, 4) })
 }))
 
 // This renders the form to search for a product

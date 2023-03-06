@@ -1,6 +1,8 @@
+<!-- Creates a navigation bar -->
 <nav class="navbar navbar-expand-lg bg-dark navbar-dark mb-3">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Shop Website</a>
+    <a class="navbar-brand" href="/">Shop Website</a>
+    <!-- Creates a button that appears if the screen is too small -->
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
       aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
@@ -8,29 +10,32 @@
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
+          <!-- Makes the link active if this is the current web page -->
           <a class="nav-link <%= url === "/" ? "active" : "" %>" aria-current="page" href="/">Home</a>
         </li>
         <li class="nav-item">
+          <!-- Makes the link active if this is the current web page -->
           <a class="nav-link <%= url.includes("products") ? "active" : "" %>" href="/products">Products</a>
         </li>
         <li class="nav-item">
+          <!-- Makes the link active if this is the current web page -->
           <a class="nav-link <%= url.includes("categories") ? "active" : "" %>" href="/categories">Categories</a>
         </li>
       </ul>
       <div class="navbar-nav">
         <div class="nav-item">
+          <!-- Makes the link active if this is the current web page -->
           <a href="/search"
             class="nav-link position-relative <%= url.includes("search") || url.includes("/searchproduct/") ? "active" : "" %>">Search</a>
         </div>
         <div class="nav-item">
+          <!-- Makes the link active if this is the current web page -->
+          <!-- Adds the cart length -->
           <a class="nav-link position-relative <%= url.includes("cart") ? "active" : "" %>" href="/cart">Cart
             [<%= cartLength %>]
-            <!-- <span
-              class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger"><%= cartLength %><span
-                class="visually-hidden">unread messages</span>
-            </span> -->
           </a>
         </div>
+        <!-- If the user is logged in then display the logout button and accoutn button -->
         <% if (user) { %>
         <div class="nav-item">
           <a class="nav-link <%= url.includes("account") ? "active" : "" %>" href="/account">Account</a>
@@ -39,6 +44,7 @@
           <a class="nav-link" href="/logout">Logout</a>
         </div>
         <% } else { %>
+        <!-- If not then display login and register buttons -->
         <div class="nav-item">
           <a class="nav-link" href="/login">Login</a>
         </div>

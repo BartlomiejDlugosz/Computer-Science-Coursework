@@ -1,10 +1,13 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
 <h1 class="display-3 mb-3">All Categories</h1>
 <div class="row">
+    <!-- Loops through all the categories provided -->
     <% for (let category of categories) { %>
     <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
+                <!-- Fills in the category name and description and routes the link to the right location -->
                 <h5 class="card-title">
                     <%= category.name %>
                 </h5>

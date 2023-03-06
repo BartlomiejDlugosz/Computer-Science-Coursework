@@ -1,11 +1,15 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
 <h1 class="display-3">Cart</h1>
 <div class="row">
+    <!-- Loops through all the items in the cart -->
     <% for (let item of cart) { %>
     <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center item">
         <div class="card h-100">
             <div class="card-body d-flex flex-column">
+                <!-- Creates a card for each item with it's name, price and quantity -->
                 <h5 class="card-title"><%= item.product.name %></h5>
+                <!-- Checks if there's a discount and formats the price correctly -->
                 <% if (item.product.discount) { %>
                 <b><s
                         style="color: red;">£<%= item.product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></s></b>
@@ -15,8 +19,10 @@
                 <h6><b>£<%= item.product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
                 </h6>
                 <% } %>
+                <!-- Uses either the brief description or the full description -->
                 <p class="card-text"><%= item.product.briefDescription || item.product.description %> </p>
                 <div class="row text-center mb-2 gx-0 mt-auto">
+                    <!-- Creates the buttons for incrementing and decrementing the quantity -->
                     <div class="col-sm-2"><a href="/cart/qty/remove/<%= item.product.id %>?redirect=<%= url %>"
                             class="btn btn-outline-primary py-auto w-100 <%= item.qty <= 1 ? 'disabled' : '' %>">-</a>
                     </div>
@@ -25,6 +31,7 @@
                             class="btn btn-outline-primary py-auto w-100 <%= item.product.stock <= item.qty ? 'disabled' : '' %>">+</a>
                     </div>
                 </div>
+                <!-- Creates a link to remove the product from the cart -->
                 <a href="/cart/remove/<%= item.product.id %>?redirect=<%= url %>" class="btn btn-outline-primary">Remove
                     from Cart</a>
             </div>
@@ -32,7 +39,7 @@
     </div>
     <% } %>
 </div>
-
+<!-- If there are no items in the cart then display a message -->
 <% if (cart.length > 0) { %>
 <a href="/order" class="btn btn-success" id="order">Order</a>
 <% } else { %>
