@@ -14,7 +14,9 @@ module.exports.catchAsync = func => {
 // Defines a custom error class containing a message and a status
 class ExpressError extends Error {
     constructor(message, status) {
+        // Uses the base error class constructor first
         super()
+        // Then adds extra information
         this.message = message
         this.status = status
     }

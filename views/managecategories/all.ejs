@@ -1,9 +1,11 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
 <div class="d-flex justify-content-between">
     <a href="/account" class="btn btn-danger mb-5">Return to Menu</a>
     <a href="/managecategories/new" class="btn btn-success mb-5">New Category</a>
 </div>
 <div class="row">
+    <!-- Loops through all the categories and creates a card for them with a link to edit them -->
     <% for (let category of categories) { %>
     <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
         <div class="card h-100">
