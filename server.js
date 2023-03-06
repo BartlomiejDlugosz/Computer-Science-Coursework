@@ -244,8 +244,10 @@ app.use((error, req, res, next) => {
         req.flash("error", error.message)
         return res.redirect("/register")
     } else if (req.originalUrl.includes("/products")) {
+        // Defaults redirect link to the new products form
+        const { redirect = "/manageproducts/new" } = req.query
         req.flash("error", error.message)
-        return res.redirect("/manageproducts/new")
+        return res.redirect(redirect)
     }
     const { status = 500 } = error
     if (!error.message) error.message = "Oh no, Something went wrong!"
