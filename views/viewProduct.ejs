@@ -1,24 +1,30 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
+<!-- Creates a menu with a back button to go back to the previous page -->
 <div class="d-flex justify-content-between">
     <a href="javascript:window.history.back()" class="btn btn-danger mb-5">Return to Products</a>
 </div>
 <div class="pb-5">
     <div class="row">
         <div class="col-lg-6">
+            <!-- Creates a carousel of images -->
             <div id="carousel" class="carousel slide mb-3">
                 <div class="carousel-indicators">
+                    <!-- Creates the buttons to switch between the images at the bottom -->
                     <% product.images.forEach((img, i) => { %>
                     <button type="button" data-bs-target="#carousel" data-bs-slide-to="<%= i %>"
                         class="<%= i === 0 ? "active" : "" %>"></button>
                     <% }) %>
                 </div>
                 <div class="carousel-inner">
+                    <!-- Adds the all the images to the carousel -->
                     <% product.images.forEach((img, i) => { %>
                     <div class="carousel-item <%= i === 0 ? "active" : "" %>">
                         <img src="<%= img %>" class="d-block w-100" alt="">
                     </div>
                     <% }) %>
                 </div>
+                <!-- If there's more than one image then carousel buttons are made on the sides -->
                 <% if (product.images.length > 1) { %>
                 <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -32,17 +38,21 @@
             </div>
         </div>
         <div class="col-lg-6">
+            <!-- Fills in all the information for the product -->
             <div class="row">
                 <h1 class="col"><%= product.name %></h1>
             </div>
             <div class="row">
                 <p class="col">
+                    <!-- The price is formatted to the price format (two decimal places) -->
+                    <!-- If there's a discount then display the old price in red crossed out text -->
                     <% if (product.discount) { %>
                     <b><s
                             style="color: red;">£<%= product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></s></b>
                 <h6><b>£<%= product.discountedPrice.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
                 </h6>
                 <% } else { %>
+                <!-- else display the price normally -->
                 <h6><b>£<%= product.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
                 </h6>
                 <% } %>
@@ -51,7 +61,7 @@
             <div class="row">
                 <p class="col"><%= product.description %></p>
             </div>
-
+            <!-- Creates a button to add the item to the cart -->
             <div class="row">
                 <a href="/cart/add/<%= product.id %>"
                     class="btn btn-success <%=product.stock <= 0 ? 'disabled' : '' %>"><%=product.stock <= 0 ? "Out of Stock"

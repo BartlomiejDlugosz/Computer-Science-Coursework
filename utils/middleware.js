@@ -30,9 +30,11 @@ module.exports.validateProduct = (req, res, next) => {
     dataTypeCheck(product.discount, "boolean", "Discount must be a boolean", true)
 
     // Conditional check to require the discounted price is the discount is set to true
-    if (product.discount) presenceCheck(product.discountedPrice, "Can't leave discounted price empty")
-    dataTypeCheck(product.discountedPrice, "number", "Discounted price must be a number", true)
-    min(product.discountedPrice, 0, "Discounted price must be greater than 0", true)
+    if (product.discount) {
+        presenceCheck(product.discountedPrice, "Can't leave discounted price empty")
+        dataTypeCheck(product.discountedPrice, "number", "Discounted price must be a number")
+        min(product.discountedPrice, 0, "Discounted price must be greater than 0")
+    }
 
     dataTypeCheck(product.categories, "array", "Categories must be an array", true)
 

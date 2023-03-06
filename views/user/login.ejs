@@ -1,25 +1,31 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
+<!-- Creates a html form where all the login information will be submitted -->
 <form action="/login" method="POST" class="mb-5 needs-validation" novalidate>
+    <!-- Contains the email field -->
     <div class="form-group row mb-3">
         <label for="email" class="col-form-label col-sm-2">Email:</label>
         <div class="col-sm-10">
             <input type="email" name="user[email]" id="email" class="form-control" placeholder="Email"
                 autocomplete="email" required>
+            <!-- Feedback if the email is invalid -->
             <div class="invalid-feedback">
                 Please enter a valid email
             </div>
         </div>
     </div>
+    <!-- Contains the password field -->
     <div class="form-group row mb-3">
         <label for="password" class="col-form-label col-sm-2">Password:</label>
         <div class="col-sm-10">
             <input type="password" name="user[password]" id="password" class="form-control" placeholder="Password"
                 required>
+            <!-- Feedback if the password isn't entered -->
             <div class="invalid-feedback">
                 Please enter a password
             </div>
         </div>
     </div>
-
+    <!-- Submits the form to the url provided -->
     <button class="btn btn-success form-control">Login</button>
 </form>

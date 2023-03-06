@@ -1,16 +1,20 @@
+<!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
 <h1 class="mb-5">Account</h1>
+<!-- Creates all the buttons for the customer -->
 <a href="/user/editdetails" class="btn btn-primary">Edit Account Details</a>
 <a href="/user/changepassword" class="btn btn-primary">Change Password</a>
 <a href="/user/deleteaccount" class="btn btn-danger">Delete Account</a>
 <a href="/user/orders" class="btn btn-primary">View orders</a>
 <br><br>
+<!-- If the user is a staff member then it creates buttons only for staff -->
 <% if (user.permLvl >= 2) { %>
 <a href="/manageproducts/all" class="btn btn-primary">Manage Products</a>
 <a href="/manageorders/all" class="btn btn-primary">Manage Orders</a>
 <a href="/managecategories/all" class="btn btn-primary">Manage Categories</a>
 <% } %>
 <br><br>
+<!-- If the user is the owner then it creates buttons only for the owner -->
 <% if (user.permLvl >= 3) { %>
 <a href="/manageusers/" class="btn btn-primary">Manage Users</a>
 <% } %>

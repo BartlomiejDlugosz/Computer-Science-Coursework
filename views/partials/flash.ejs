@@ -1,10 +1,11 @@
+<!-- If the flash is a success message then display a success popup -->
 <% if (success && success.length) { %>
 <div class="alert alert-success alert-dismissible fade show" role="alert">
     <%= success %>
     <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
 </div>
 <% } %>
-
+<!-- If an error then display as a error -->
 <% if (error && error.length) { %>
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
     <%= error %>
