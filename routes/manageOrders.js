@@ -52,7 +52,7 @@ const quicksortOrders = (orders, start, end) => {
 // Defines the route to view all the orders
 router.get("/all", catchAsync(async (req, res) => {
     // Extracts the status and userid from the parameters incase the results have to be filtered
-    const { status, userId } = req.query
+    const { status, userId, redirect = "/account" } = req.query
     let orders
     // This creates a search options object which can be passed through to filter the orders
     const searchOptions = {}
@@ -70,8 +70,8 @@ router.get("/all", catchAsync(async (req, res) => {
     orders = await Order.find(searchOptions)
     // Sorts the orders into ascending date order (oldest to newest)
     orders = quicksortOrders(orders, 0, orders.length - 1)
-    // Then renders the template with the orders
-    res.render("manageorders/all", { orders })
+    // Then renders the template with the orders and the redirect link
+    res.render("manageorders/all", { orders, redirect })
 }))
 
 // Defines the route to view a specific order

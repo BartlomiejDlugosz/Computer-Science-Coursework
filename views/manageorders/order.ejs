@@ -69,7 +69,7 @@
                             <h6><b>£<%= product.id.price.toLocaleString("en", {minimumFractionDigits: 2, maximumFractionDigits: 2}) %></b>
                             </h6>
                             <p class="card-text">
-                                <%= product.id.briefDescription %>
+                                <%= product.id.briefDescription || product.id.description %>
                             </p>
                             <p>Qty: <b>
                                     <%= product.qty %>
