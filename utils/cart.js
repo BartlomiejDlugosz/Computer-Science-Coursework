@@ -153,11 +153,11 @@ class Cart {
     async modifyItem(req, itemId, operator) {
         // Gets stock and ensures it's valid
         const stock = await getProductStock(itemId)
-        if (!stock) return new ExpressError("Product not found!", 500)
+        if (!stock) throw new ExpressError("Product not found!", 500)
 
         // Finds the item in the cart and throws an error if it's not found
         const cartItem = this.findInCart(itemId)
-        if (!cartItem) return new ExpressError("Product not found!", 500)
+        if (!cartItem) throw new ExpressError("Product not found!", 500)
 
         // Increments the quantity if the operator is "add", otherwise it decrements it
         cartItem.qty += operator === "add" ? 1 : -1
