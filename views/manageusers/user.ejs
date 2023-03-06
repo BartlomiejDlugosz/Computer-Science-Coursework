@@ -31,7 +31,8 @@
         <p class="col-sm-2">Orders:</p>
         <p class="col-sm-10">
             <!-- Creates a button to view all the users orders -->
-            <a class="btn btn-primary" href="/manageorders/all?userId=<%= user.id %>">View orders</a>
+            <a class="btn btn-primary"
+                href="/manageorders/all?userId=<%= user.id %>&redirect=/manageusers/<%= user._id %>">View orders</a>
         </p>
     </div>
     <!-- Creates a form to be able to update the users permission level -->

@@ -179,7 +179,7 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
 // Defines a url for update an order
 // A protected route and can only be accessed with correctly signed information
 // Note: If an error occurs, stripe will keep resending the request every hour until successfull
-router.post("/orderupdate", express.json(), catchAsync(async (req, res) => {
+router.post("/orderupdate", catchAsync(async (req, res) => {
     // This extracts the information in the body
     const payload = req.body
     // Gets the stripe signature from the headers
