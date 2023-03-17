@@ -36,11 +36,18 @@ const transporter = nodemailer.createTransport({
     port: 465,
     host: "smtp.gmail.com",
     auth: {
-        user: "***REMOVED***",
+        user: "bartlomiejd15@gmail.com",
         pass: process.env.EMAIL_PASSWORD
     },
     secure: true
 })
+
+const transferCart = (req, user) => {
+    // If the session contains a cart then it's transferred to the user
+    if (req.cart.getCartLength() > 0) {
+        user.cart = req.session.cart.cart
+    }
+}
 
 // Defines the route to render the account menu
 router.get("/account", isLoggedIn, (req, res) => {
@@ -68,11 +75,7 @@ router.post("/login", notLoggedIn, catchAsync(async (req, res) => {
         if (await bcrypt.compare(u.password, user.password)) {
             // If the passwords match then the user is saved to the session
             req.session.userId = user.id
-            // If the session contains a cart then it's transferred to the user
-            if (req.cart.getCartLength() > 0) {
-                user.cart = req.session.cart.cart
-                await user.save()
-            }
+            transferCart(req, user)
             req.flash("success", "Successfully logged in!")
             return res.redirect(req.session.previousUrl || "/")
         }
@@ -92,11 +95,7 @@ router.post("/register", notLoggedIn, validateUser, catchAsync(async (req, res) 
     await user.save()
     // The userid is saved to the session
     req.session.userId = user.id
-    // If the session contains a cart then it's transferred to the user
-    if (req.cart.getCartLength() > 0) {
-        user.cart = req.session.cart.cart
-        await user.save()
-    }
+    transferCart(req, user)
     // A success message is displayed and the user is redirected
     req.flash("success", "Successfully created account!")
     res.redirect(req.session.previousUrl || "/")
@@ -249,7 +248,7 @@ router.post("/orderupdate", catchAsync(async (req, res) => {
                 else {
                     // Defines the email data including the customers email and the html data
                     const mailData = {
-                        from: "***REMOVED***",
+                        from: "bartlomiejd15@gmail.com",
                         to: customer.email,
                         subject: "Order confirmation",
                         html: data
