@@ -42,6 +42,13 @@ const transporter = nodemailer.createTransport({
     secure: true
 })
 
+const transferCart = (req, user) => {
+    // If the session contains a cart then it's transferred to the user
+    if (req.cart.getCartLength() > 0) {
+        user.cart = req.session.cart.cart
+    }
+}
+
 // Defines the route to render the account menu
 router.get("/account", isLoggedIn, (req, res) => {
     res.render("account")
@@ -68,11 +75,7 @@ router.post("/login", notLoggedIn, catchAsync(async (req, res) => {
         if (await bcrypt.compare(u.password, user.password)) {
             // If the passwords match then the user is saved to the session
             req.session.userId = user.id
-            // If the session contains a cart then it's transferred to the user
-            if (req.cart.getCartLength() > 0) {
-                user.cart = req.session.cart.cart
-                await user.save()
-            }
+            transferCart(req, user)
             req.flash("success", "Successfully logged in!")
             return res.redirect(req.session.previousUrl || "/")
         }
@@ -92,11 +95,7 @@ router.post("/register", notLoggedIn, validateUser, catchAsync(async (req, res) 
     await user.save()
     // The userid is saved to the session
     req.session.userId = user.id
-    // If the session contains a cart then it's transferred to the user
-    if (req.cart.getCartLength() > 0) {
-        user.cart = req.session.cart.cart
-        await user.save()
-    }
+    transferCart(req, user)
     // A success message is displayed and the user is redirected
     req.flash("success", "Successfully created account!")
     res.redirect(req.session.previousUrl || "/")
