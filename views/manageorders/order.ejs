@@ -89,7 +89,8 @@
         </p>
     </div>
     <!-- Creates a form where the user can edit the status of the order or add a tracking number -->
-    <form action="/manageorders/updatestatus/<%= order.id %>?_method=PUT" method="POST">
+    <form action="/manageorders/updatestatus/<%= order.id %>?_method=PUT" method="POST" class="mb-3 needs-validation"
+        novalidate>
         <div class="form-group row mb-3">
             <label for="status" class="col-form-label col-sm-2">Status:</label>
             <div class="col-sm-8">

@@ -10,7 +10,7 @@ const bcrypt = require("bcrypt")
 // Imports the error handling functions
 const { catchAsync } = require("../utils/errorhandling")
 // Imports the required middleware
-const { isLoggedIn, validateUser } = require("../utils/middleware")
+const { isLoggedIn, validateUser, validatePassword } = require("../utils/middleware")
 
 // Model imports
 // Imports the user model
@@ -92,7 +92,7 @@ router.get("/changepassword", (req, res) => {
 })
 
 // Defines route for changing password
-router.post("/changepassword", catchAsync(async (req, res) => {
+router.post("/changepassword", validatePassword, catchAsync(async (req, res) => {
     // Extracts the current password and the new password from the body
     const { currentPassword, newPassword } = req.body
     // Checks to see if the password entered matches the current one

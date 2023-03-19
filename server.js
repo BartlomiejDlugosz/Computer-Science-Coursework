@@ -135,6 +135,8 @@ app.use(/\/((?!orderupdate).)*/, catchAsync(async (req, res, next) => {
     req.cart = new Cart((user ? user.id : null), currentCart)
     // Adds all the information to the templates so they can render the right information
     res.locals.user = user
+    // Adds the ignore auth flash to the request to fix redirect bug
+    req.ignoreAuth = req.flash("ignoreAuth")[0]
     res.locals.url = req.originalUrl
     res.locals.success = req.flash("success")
     res.locals.error = req.flash("error")
@@ -248,10 +250,21 @@ app.use((error, req, res, next) => {
         const { redirect = "/manageproducts/new" } = req.query
         req.flash("error", error.message)
         return res.redirect(redirect)
+    } else if (req.originalUrl.includes("editdetails")) {
+        // Extracts the user information from the body
+        const { user } = req.body
+        // Saves the information the user entered so it can be filled again on refresh
+        req.flash("previous", user)
+        req.flash("error", error.message)
+        return res.redirect("/user/editdetails")
+    } else if (req.originalUrl.includes("/changepassword")) {
+        req.flash("error", error.message)
+        return res.redirect("/user/changepassword")
     }
     const { status = 500 } = error
-    if (!error.message) error.message = "Oh no, Something went wrong!"
-    res.status(status).render("error", { error })
+    let message
+    if (error instanceof ExpressError) message = error.message
+    res.status(status).render("error", { error, message })
 })
 
 // This makes the app listen on the defined port for any incoming requests

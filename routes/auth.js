@@ -131,6 +131,9 @@ router.get("/order", isLoggedIn, catchAsync(async (req, res) => {
         return res.redirect("/cart")
     }
 
+    // Checks to make sure the cart has at least one item
+    if (cart.cart.length <= 0) throw new ExpressError("You don't have any items in your cart!")
+
     // This goes through all the items in the cart
     for (let item of cart.cart) {
         // Querys for the product from the database

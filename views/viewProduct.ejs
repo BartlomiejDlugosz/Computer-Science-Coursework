@@ -1,5 +1,13 @@
 <!-- Uses the boilerplate template to prevent code repetition and improve consistency -->
 <% layout("layouts/boilerplate") %>
+<!-- Invert the colours of the buttons and indicators -->
+<style>
+    .carousel-control-next,
+    .carousel-control-prev,
+    .carousel-indicators {
+        filter: invert(100%);
+    }
+</style>
 <!-- Creates a menu with a back button to go back to the previous page -->
 <div class="d-flex justify-content-between">
     <a href="javascript:window.history.back()" class="btn btn-danger mb-5">Return to Products</a>

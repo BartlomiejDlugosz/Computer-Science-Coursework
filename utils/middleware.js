@@ -84,10 +84,28 @@ module.exports.validateUser = (req, res, next) => {
     next()
 }
 
+// This validates the passwords when changing the password
+module.exports.validatePassword = (req, res, next) => {
+    // Extracts the current password and new password from the body
+    const { currentPassword, newPassword } = req.body
+
+    // Carries out all the validation checks on the passwords
+    presenceCheck(currentPassword, "Missing current password")
+    presenceCheck(newPassword, "Missing new password")
+
+    dataTypeCheck(currentPassword, "string", "Current password must be a string")
+    minLengthCheck(currentPassword, 6, "Password must be longer than 6 characters")
+
+    dataTypeCheck(newPassword, "string", "Current password must be a string")
+    minLengthCheck(newPassword, 6, "Password must be longer than 6 characters")
+
+    next()
+}
+
 // Checks to see if the current user is logged in
 module.exports.isLoggedIn = (req, res, next) => {
     // If there's a flash to ignore auth, it redirects to the home page
-    if (req.flash("ignoreAuth")[0]) return res.redirect("/")
+    if (req.ignoreAuth) return res.redirect("/")
     // If the user object exists then they're logged in
     if (req.user) {
         return next()

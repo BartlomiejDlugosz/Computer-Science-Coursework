@@ -61,6 +61,8 @@
             <div class="row">
                 <!-- Loops through all the products in the order and creates a card for them with some basic information -->
                 <% for (let product of order.productIds) { %>
+                <!-- Checks if the product still exists -->
+                <% if (!product.id) product.id = {name: "Product not available", price: "0", description: "This product has been removed and is no longer available"} %>
                 <div class="col-lg-3 col-md-4 col-sm-6 mb-5 align-center">
                     <div class="card h-100">
                         <div class="card-body d-flex flex-column">
